@@ -18,7 +18,7 @@ void VertexShader::load()
     const CHAR* sources[1] = { mSource.c_str() };
     glShaderSource(mHandle, 1, sources, NULL);
     glCompileShader(mHandle);
-    
+
 #ifdef DEBUG
     printLog();
 #endif
@@ -33,13 +33,13 @@ void VertexShader::printLog()
 {
     ApplicationManager::get()->log("====== Vertex Shader Log ======");
 
-    int logMessageLength = 0;
+    INT logMessageLength = 0;
 	glGetShaderiv(mHandle, GL_INFO_LOG_LENGTH, &logMessageLength);
 
 	if ( logMessageLength > 1 )
 	{
-        int charactersWritten = 0;
-		char* logMessage = (char*) malloc(logMessageLength);
+        INT charactersWritten = 0;
+		CHAR* logMessage = (CHAR*) malloc(logMessageLength);
 		glGetShaderInfoLog(mHandle, logMessageLength, &charactersWritten, logMessage);
 
 		ApplicationManager::get()->log(logMessage);
@@ -47,6 +47,6 @@ void VertexShader::printLog()
 	} 
     else 
     {
-        ApplicationManager::get()->log("Compilation Successful");
+        ApplicationManager::get()->log("Compilation Successful\n");
     }
 }

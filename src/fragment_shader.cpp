@@ -5,7 +5,7 @@
 FragmentShader::FragmentShader(const STRING& filename) : Shader(filename),
     mHandle(NULL)
 {
-    mHandle = glCreateShader(GL_VERTEX_SHADER); 
+    mHandle = glCreateShader(GL_FRAGMENT_SHADER); 
 }
 
 FragmentShader::~FragmentShader()
@@ -33,13 +33,13 @@ void FragmentShader::printLog()
 {
     ApplicationManager::get()->log("====== Fragment Shader Log ======");
 
-    int logMessageLength = 0;
+    INT logMessageLength = 0;
 	glGetShaderiv(mHandle, GL_INFO_LOG_LENGTH, &logMessageLength);
 
 	if ( logMessageLength > 1 )
 	{
-        int charactersWritten = 0;
-		char* logMessage = (char*) malloc(logMessageLength);
+        INT charactersWritten = 0;
+		CHAR* logMessage = (CHAR*) malloc(logMessageLength);
 		glGetShaderInfoLog(mHandle, logMessageLength, &charactersWritten, logMessage);
 
 		ApplicationManager::get()->log(logMessage);
@@ -47,6 +47,6 @@ void FragmentShader::printLog()
 	} 
     else 
     {
-        ApplicationManager::get()->log("Compilation Successful");
+        ApplicationManager::get()->log("Compilation Successful\n");
     }
 }

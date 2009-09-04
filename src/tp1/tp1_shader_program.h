@@ -15,7 +15,7 @@ public:
     Tp1FragmentShader() : FragmentShader("tp1_fragment_shader.glsl") { };
     virtual ~Tp1FragmentShader() { };
 
-    virtual void bindData(UINT programHandle);
+    virtual void bindOutputs(UINT programHandle);
 };
 
 //
@@ -41,7 +41,7 @@ public:
     Tp1ShaderProgram();
     virtual ~Tp1ShaderProgram();
 
-    virtual void bindVariables();
+    virtual void bindUniforms();
 
 private:
     Tp1FragmentShader* mFragmentShader;

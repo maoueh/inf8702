@@ -4,7 +4,7 @@
 /// Fragment Shader
 //
 
-void BrickFragmentShader::bindData(UINT programHandle)
+void BrickFragmentShader::bindOutputs(UINT programHandle)
 {
     glBindFragDataLocation( programHandle, 0, "mFragmentColor" );
 }
@@ -41,11 +41,11 @@ BrickShaderProgram::~BrickShaderProgram()
     delete mVertexShader;
 }
 
-void BrickShaderProgram::bindVariables()
+void BrickShaderProgram::bindUniforms()
 {
-    glUniform3f(Utils::getUniformLocation(mHandle, "mBrickColor"), 1.0f, 0.3f, 0.2f);
-    glUniform3f(Utils::getUniformLocation(mHandle, "mMortarColor"), 0.85f, 0.86f, 0.84f);
-    glUniform2f(Utils::getUniformLocation(mHandle, "mBrickSize"), 0.30f, 0.15f);
-    glUniform2f(Utils::getUniformLocation(mHandle, "mBrickProportion"), 0.90f, 0.85f);
-    glUniform3f(Utils::getUniformLocation(mHandle, "mLightPosition"), 0.0f, 0.0f, 4.0f);
+    glUniform3f(getUniformLocation("mBrickColor"), 1.0f, 0.3f, 0.2f);
+    glUniform3f(getUniformLocation("mMortarColor"), 0.85f, 0.86f, 0.84f);
+    glUniform2f(getUniformLocation("mBrickSize"), 0.30f, 0.15f);
+    glUniform2f(getUniformLocation("mBrickProportion"), 0.90f, 0.85f);
+    glUniform3f(getUniformLocation("mLightPosition"), 0.0f, 0.0f, 4.0f);
 }

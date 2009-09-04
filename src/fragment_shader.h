@@ -12,7 +12,7 @@ public:
     virtual void load();
     virtual UINT getHandle();
 
-    virtual void bindData(UINT programHandle) = 0;
+    virtual void bindOutputs(UINT programHandle) = 0;
 
 private:
     virtual void printLog();

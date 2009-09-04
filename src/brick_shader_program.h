@@ -15,7 +15,7 @@ public:
     BrickFragmentShader() : FragmentShader("brick_fragment_shader.glsl") { };
     virtual ~BrickFragmentShader() { };
 
-    virtual void bindData(UINT programHandle);
+    virtual void bindOutputs(UINT programHandle);
 };
 
 //
@@ -41,7 +41,7 @@ public:
     BrickShaderProgram();
     virtual ~BrickShaderProgram();
 
-    virtual void bindVariables();
+    virtual void bindUniforms();
 
 private:
     BrickFragmentShader* mFragmentShader;

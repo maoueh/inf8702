@@ -13,8 +13,6 @@ public:
 
 	// Warning : The resulting string is limited to 4096 characters
 	static STRING format(CHAR* format, ...);
-
-    static INT getUniformLocation(UINT programHandle, const CHAR* name);
 };
 
 #endif

@@ -58,12 +58,3 @@ BOOL Utils::writeFileContent(const STRING& filename, const STRING& content)
 
     return FALSE;
 }
-
-INT Utils::getUniformLocation(UINT programHandle, const CHAR* name)
-{
-    INT location = 0;
-    glGetUniformLocation(programHandle, name);
-
-    //printRendererError();
-    return location;
-}

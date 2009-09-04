@@ -31,54 +31,53 @@ void Tp1Application::initialize()
    mShaderProgram->link();
 }
 
-
 void Tp1Application::compileCubeList(FLOAT size) 
 {
     mCubeListId = glGenLists(1);
-   glNewList(mCubeListId, GL_COMPILE);
-   {
-      // Front Face
-      glPushMatrix();
-         glTranslatef(0.0f, size / 2.0f, 0.0f);
-         glCallList(mQuadGridListId);
-      glPopMatrix();
+	glNewList(mCubeListId, GL_COMPILE);
+	{
+	  // Front Face
+	  glPushMatrix();
+		 glTranslatef(0.0f, size / 2.0f, 0.0f);
+		 glCallList(mQuadGridListId);
+	  glPopMatrix();
 
-      // Back Face
-      glPushMatrix();
-         glTranslatef(0.0f, -size / 2.0f, 0.0f);
-         glRotatef(180.0, 0.0, 0.0, 1.0);
-         glCallList(mQuadGridListId);
-      glPopMatrix();
+	  // Back Face
+	  glPushMatrix();
+		 glTranslatef(0.0f, -size / 2.0f, 0.0f);
+		 glRotatef(180.0, 0.0, 0.0, 1.0);
+		 glCallList(mQuadGridListId);
+	  glPopMatrix();
 
-      // Left Face
-      glPushMatrix();
-         glTranslatef(-size / 2.0f, 0.0f, 0.0f);
-         glRotatef(90.0, 0.0, 0.0, 1.0);
-         glCallList(mQuadGridListId);
-      glPopMatrix();
+	  // Left Face
+	  glPushMatrix();
+		 glTranslatef(-size / 2.0f, 0.0f, 0.0f);
+		 glRotatef(90.0, 0.0, 0.0, 1.0);
+		 glCallList(mQuadGridListId);
+	  glPopMatrix();
 
-      // Right Face
-      glPushMatrix();
-         glTranslatef(size / 2.0f, 0.0f, 0.0f);
-         glRotatef(-90.0, 0.0, 0.0, 1.0);
-         glCallList(mQuadGridListId);
-      glPopMatrix();
+	  // Right Face
+	  glPushMatrix();
+		 glTranslatef(size / 2.0f, 0.0f, 0.0f);
+		 glRotatef(-90.0, 0.0, 0.0, 1.0);
+		 glCallList(mQuadGridListId);
+	  glPopMatrix();
 
-      // Down Face
-      glPushMatrix();
-         glTranslatef(0.0f, 0.0f, size / 2.0f);
-         glRotatef(90.0, 1.0, 0.0, 0.0);
-         glCallList(mQuadGridListId);
-      glPopMatrix();
+	  // Down Face
+	  glPushMatrix();
+		 glTranslatef(0.0f, 0.0f, size / 2.0f);
+		 glRotatef(90.0, 1.0, 0.0, 0.0);
+		 glCallList(mQuadGridListId);
+	  glPopMatrix();
 
-      // Up Face
-      glPushMatrix();
-         glTranslatef(0.0f, 0.0f, -size / 2.0f);
-         glRotatef(-90.0, 1.0, 0.0, 0.0);
-         glCallList(mQuadGridListId);
-      glPopMatrix();
-   }
-   glEndList();
+	  // Up Face
+	  glPushMatrix();
+		 glTranslatef(0.0f, 0.0f, -size / 2.0f);
+		 glRotatef(-90.0, 1.0, 0.0, 0.0);
+		 glCallList(mQuadGridListId);
+	  glPopMatrix();
+	}
+	glEndList();
 }
 
 void Tp1Application::compileQuadGridList(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal)

@@ -62,7 +62,7 @@ void ShaderProgram::link()
     if ( mVertexShader != NULL )
         mVertexShader->bindAttributes(mHandle);
     if ( mFragmentShader != NULL )
-        mFragmentShader->bindData(mHandle);
+        mFragmentShader->bindOutputs(mHandle);
 
     glLinkProgram(mHandle);
 
@@ -77,10 +77,22 @@ void ShaderProgram::link()
 
 void ShaderProgram::use()
 {
-    assert(mIsLinked != TRUE && "forgot attachFragmentShader(..) ?");
+    assert(mIsLinked == TRUE && "Program not linked yet");
 
     glUseProgram(mHandle);
-    bindVariables();
+    bindUniforms();
+}
+
+INT ShaderProgram::getUniformLocation(const CHAR* uniformName)
+{
+	assert(mIsLinked == TRUE && "Program not linked yet");
+
+	INT location = glGetUniformLocation(mHandle, uniformName);
+
+	assert(location != -1 && "Location doesn't exist");
+    //printRendererError();
+
+    return location;
 }
 
 void ShaderProgram::printLog()
@@ -93,7 +105,7 @@ void ShaderProgram::printLog()
 	if ( logMessageLength > 1 )
 	{
         int charactersWritten = 0;
-		char* logMessage = (char*) malloc(logMessageLength);
+		CHAR* logMessage = (CHAR*) malloc(logMessageLength);
 		glGetProgramInfoLog(mHandle, logMessageLength, &charactersWritten, logMessage);
 
 		ApplicationManager::get()->log(logMessage);
@@ -101,6 +113,6 @@ void ShaderProgram::printLog()
 	} 
     else 
     {
-        ApplicationManager::get()->log("Linkage Successful");
+        ApplicationManager::get()->log("Linkage Successful\n");
     }
 }

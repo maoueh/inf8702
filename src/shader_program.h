@@ -19,7 +19,9 @@ public:
     void link();
     void use();
 
-    virtual void bindVariables() = 0;
+	INT  getUniformLocation(const CHAR* uniformName);
+
+    virtual void bindUniforms() = 0;
 
 protected:
     UINT mHandle;
