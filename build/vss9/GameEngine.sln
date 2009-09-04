@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "GameEngine.vcproj", "{243001E1-7F74-470B-84C8-E5F24386E911}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrickShader", "BrickShader.vcproj", "{3C570B64-FB14-4E2E-A63C-AD1C0666763C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tp1", "Tp1.vcproj", "{BB8A52BA-A9F4-4082-8389-57D58E2D9993}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{243001E1-7F74-470B-84C8-E5F24386E911}.Debug|Win32.ActiveCfg = Debug|Win32
+		{243001E1-7F74-470B-84C8-E5F24386E911}.Debug|Win32.Build.0 = Debug|Win32
+		{243001E1-7F74-470B-84C8-E5F24386E911}.Release|Win32.ActiveCfg = Release|Win32
+		{243001E1-7F74-470B-84C8-E5F24386E911}.Release|Win32.Build.0 = Release|Win32
+		{3C570B64-FB14-4E2E-A63C-AD1C0666763C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3C570B64-FB14-4E2E-A63C-AD1C0666763C}.Debug|Win32.Build.0 = Debug|Win32
+		{3C570B64-FB14-4E2E-A63C-AD1C0666763C}.Release|Win32.ActiveCfg = Release|Win32
+		{3C570B64-FB14-4E2E-A63C-AD1C0666763C}.Release|Win32.Build.0 = Release|Win32
+		{BB8A52BA-A9F4-4082-8389-57D58E2D9993}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BB8A52BA-A9F4-4082-8389-57D58E2D9993}.Debug|Win32.Build.0 = Debug|Win32
+		{BB8A52BA-A9F4-4082-8389-57D58E2D9993}.Release|Win32.ActiveCfg = Release|Win32
+		{BB8A52BA-A9F4-4082-8389-57D58E2D9993}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
