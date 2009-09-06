@@ -4,7 +4,7 @@
 #include "console_logger.h"
 
 //
-/// Statis Definitions
+/// Static Definitions
 //
 
 ApplicationManager* ApplicationManager::sInstance = NULL;
@@ -23,6 +23,7 @@ void ApplicationManager::destroy()
     sInstance = NULL;
 }
 
+// A newline is automaticaly added at the end of each message
 void ApplicationManager::log(const CHAR* message)
 {
     Application* application = get()->getApplication();
@@ -30,12 +31,26 @@ void ApplicationManager::log(const CHAR* message)
         application->getLogger()->log(message);
 }
 
+// A newline is automaticaly added at the end of each message
+// Warning : The resulting string is limited to 4096 characters
 void ApplicationManager::log(CHAR* format, ...)
 {
     Application* application = get()->getApplication();
     if ( application != NULL )
-        application->getLogger()->log(format, "TODO - COrrect ME");
+    {
+        // Put variables into the string
+	    CHAR* arguments = (CHAR*) &format + sizeof(format);
+
+	    CHAR buffer[4096];
+        vsprintf_s( buffer, 4096, format, arguments );
+
+        application->getLogger()->log(buffer);
+    }
 }
+
+//
+/// Class Definitions
+//
 
 ApplicationManager::ApplicationManager() : 
     mApplication(NULL)
@@ -44,7 +59,8 @@ ApplicationManager::ApplicationManager() :
 
 ApplicationManager::~ApplicationManager()
 {
-
+    delete mApplication;
+    mApplication = NULL;
 }
 
 void ApplicationManager::startApplication(Application* application)

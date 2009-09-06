@@ -31,7 +31,7 @@ UINT VertexShader::getHandle()
 
 void VertexShader::printLog()
 {
-    ApplicationManager::get()->log("====== Vertex Shader Log ======");
+    ApplicationManager::get()->log("====== Vertex Shader Log (%s) ======", mFilename.c_str());
 
     INT logMessageLength = 0;
 	glGetShaderiv(mHandle, GL_INFO_LOG_LENGTH, &logMessageLength);
@@ -43,6 +43,7 @@ void VertexShader::printLog()
 		glGetShaderInfoLog(mHandle, logMessageLength, &charactersWritten, logMessage);
 
 		ApplicationManager::get()->log(logMessage);
+        //ApplicationManager::get()->log(""); // Newline
 		free(logMessage);
 	} 
     else 

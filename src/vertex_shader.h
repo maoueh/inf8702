@@ -18,7 +18,6 @@ private:
     virtual void printLog();
 
     UINT mHandle; 
-
 };
 
 #endif

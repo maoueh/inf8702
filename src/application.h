@@ -2,26 +2,38 @@
 #define APPLICATION
 
 #include "common.h"
+#include "keyboard_listener.h"
+#include "mouse_listener.h"
+#include "window_listener.h"
 
 class CommandLine;
 class Window;
 class Logger;
 
-class Application
+class Application : public KeyboardListener, MouseListener, WindowListener
 {
 public:
     Application(CommandLine* commandLine);
     virtual ~Application();
 
     void start();
+    void stop();
 
     inline Logger* getLogger();
 
-    // System Dependent Methods
-    void consumeMessage(UINT message);
+    virtual void   keyDown(Window* window, INT keyCode, INT repeat);
+    virtual void   keyUp(Window* window, INT keyCode);
 
-    inline void setInstance(HINSTANCE instance);
-    inline void setWindowProcedure(WNDPROC windowProcedure);
+    virtual void   mousePressed(Window* window, INT button);
+    virtual void   mouseReleased(Window* window, INT button);
+    virtual void   mouseDoubleClicked(Window* window, INT button);
+
+    virtual void   mouseMoved(Window* window);
+    virtual void   mouseDragged(Window* window);
+
+    virtual void   mouseWheel(Window* window);
+
+    virtual void   windowClosed(Window* window);
 
 protected:
     Application(const Application&);
@@ -35,14 +47,9 @@ protected:
 
     CommandLine* mCommandLine;
     BOOL         mIsWindowed;
-    BOOL         mContinueGameLoop;
-    Window*      mWindow;
+    BOOL         mContinueApplication;
     Logger*      mLogger;
-
-private:
-    // System Dependent Members
-    WNDPROC   mWindowProcedure;
-    HINSTANCE mInstance;
+    Window*      mWindow;
 
 };
 

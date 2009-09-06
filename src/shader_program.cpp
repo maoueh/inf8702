@@ -109,6 +109,7 @@ void ShaderProgram::printLog()
 		glGetProgramInfoLog(mHandle, logMessageLength, &charactersWritten, logMessage);
 
 		ApplicationManager::get()->log(logMessage);
+        ApplicationManager::get()->log(""); // Newline
 		free(logMessage);
 	} 
     else 

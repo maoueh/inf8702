@@ -12,7 +12,11 @@ public:
     static ApplicationManager* get();
     static void destroy();
 
+    // A newline is automaticaly added at the end of each message
     static void log(const CHAR* message);
+
+    // A newline is automaticaly added at the end of each message
+    // Warning : The resulting string is limited to 4096 characters
     static void log(CHAR* format, ...);
 
     Application* getApplication();

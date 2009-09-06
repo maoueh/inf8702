@@ -2,47 +2,11 @@
 #include "tp1_application.h"
 #include "command_line.h"
 
-//
-//// Definitions
-//
-
-LRESULT CALLBACK WindowProcedure(HWND windowHandle, UINT message, WPARAM wParameter, LPARAM lParameter);
-
-//
-//// Variables
-//
-
-ApplicationManager* gApplicationManager = NULL;
-
 int main(int argumentCount, const CHAR** arguments)
 {
-    // "" is the command line
     CommandLine commandLine(argumentCount, arguments);
-    Application* application = new Tp1Application(&commandLine);
-    application->setWindowProcedure(WindowProcedure);
+    ApplicationManager::get()->startApplication(new Tp1Application(&commandLine));
 
-    gApplicationManager = ApplicationManager::get();
-    gApplicationManager->startApplication(application);
-
-    delete application;
-
+    ApplicationManager::destroy();
     return 0;
 }
-
-//int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR commandLine, INT commanShow) 
-//{
-//    gApplication = new BrickShaderApplication(commandLine);
-//    gApplication->setWindowProcedure(WindowProcedure);
-//
-//    gApplication->start();
-//
-//    delete gApplication;	
-//}
-
-
-LRESULT WINAPI WindowProcedure(HWND windowHandle, UINT messageId, WPARAM wParameter, LPARAM lParameter)
-{
-    gApplicationManager->getApplication()->consumeMessage(messageId);
-    return DefWindowProc( windowHandle, messageId, wParameter, lParameter );
-}
-

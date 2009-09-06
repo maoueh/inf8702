@@ -5,12 +5,12 @@
 #include "window.h"
 
 //
-//// Constructor/Destructor
+//// Application Constructor/Destructor
 //
 
 Application::Application(CommandLine* commandLine) : 
-    mCommandLine(commandLine), mWindow(NULL), mIsWindowed(WINDOWED_MODE), mContinueGameLoop(TRUE),
-    mLogger(new ConsoleLogger()), mWindowProcedure(NULL)
+    mCommandLine(commandLine), mWindow(NULL), mIsWindowed(WINDOWED_MODE), 
+    mContinueApplication(TRUE), mLogger(new ConsoleLogger())
 {
 }
 
@@ -24,21 +24,22 @@ Application::~Application()
 }
 
 //
-//// Members
+//// Application Members
 //
 
 void Application::initialize()
 {
-    assert(mWindowProcedure != NULL && "forgot setWindowProcedure(..) ?");
-
     if ( mCommandLine->hasMoreTokens() )
         consumeCommandLine();
 
     mWindow = new Window("INF8702", getName().c_str(), mIsWindowed);
     mWindow->setRenderingContext(new RenderingContext());
 
-    mWindow->initialize(mWindowProcedure, mIsWindowed);
+    mWindow->addKeyboardListener(this);
+    mWindow->addMouseListener(this);
+    mWindow->addWindowListener(this);
 
+    mWindow->initialize(mIsWindowed);
     mWindow->show();
 }
 
@@ -46,7 +47,7 @@ void Application::start()
 {
     initialize();
 
-   	while( mContinueGameLoop )
+   	while( mContinueApplication )
 	{
         MSG message = {0, 0, 0};
         // Let the OS live a little..
@@ -58,19 +59,13 @@ void Application::start()
 
         process();
 	}
+
+    PostQuitMessage(0);
 }
 
-void Application::consumeMessage(UINT messageId)
+void Application::stop()
 {
-	switch(messageId)
-	{
-	  case WM_DESTROY:
-      {
-			mContinueGameLoop = FALSE;
-			PostQuitMessage(0);
-            break;
-      }
-	}
+    mContinueApplication = FALSE;
 }
 
 void Application::consumeCommandLine()
@@ -84,4 +79,49 @@ void Application::consumeCommandLine()
             break;
         }
     } while (mCommandLine->hasMoreTokens());
+}
+
+void Application::keyDown(Window* window, INT keyCode, INT repeat)
+{
+    
+}
+
+void Application::keyUp(Window* window, INT keyCode)
+{
+    
+}
+
+void Application::mousePressed(Window* window, INT button)
+{
+
+}
+
+void Application::mouseReleased(Window* window, INT button)
+{
+
+}
+
+void Application::mouseDoubleClicked(Window* window, INT button)
+{
+
+}
+
+void Application::mouseMoved(Window* window)
+{
+    cout << "Mouse Moved" << endl;
+}
+
+void Application::mouseDragged(Window* window)
+{
+    cout << "Mouse Dragged" << endl;
+}
+
+void Application::mouseWheel(Window* window)
+{
+
+}
+
+void Application::windowClosed(Window* window)
+{
+    stop();
 }
