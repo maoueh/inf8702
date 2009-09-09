@@ -6,7 +6,7 @@
 
 void Tp1FragmentShader::bindOutputs(UINT programHandle)
 {
-    //glBindFragDataLocation( programHandle, 0, "mFragmentColor" );
+
 }
 
 //
@@ -15,8 +15,7 @@ void Tp1FragmentShader::bindOutputs(UINT programHandle)
 
 void Tp1VertexShader::bindAttributes(UINT programHandle)
 {
-  /*  glBindAttribLocation( programHandle, 1, "mModelCoordVertex" );
-    glBindAttribLocation( programHandle, 2, "mModelCoordNormal" );*/
+
 }
 
 //

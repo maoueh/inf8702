@@ -5,7 +5,7 @@
 
 OpenGlApplication::OpenGlApplication(CommandLine* commandLine) : Application(commandLine),
     mCameraTheta(DEG2RAD(270.0f)), mCameraPhi(DEG2RAD(90.0f)), mCameraRho(30.0f),
-    mCameraX(0.0), mCameraY(0.0), mCameraZ(0.0)
+    mCameraX(0.0), mCameraY(0.0), mCameraZ(0.0), mIsPerspective(TRUE)
 {
 
 }
@@ -57,6 +57,49 @@ void OpenGlApplication::process()
     mWindow->swapBuffers();
 }
 
+void OpenGlApplication::keyPressed(Window* window, INT keyCode, INT repeat)
+{
+   switch(keyCode) 
+   {
+      case VK_ESCAPE : // Fall Through
+      case VK_Q :
+		stop();
+        break;
+      case VK_P :
+         mIsPerspective = !mIsPerspective;
+         break;
+      case VK_MINUS :  // Fall Through
+      case VK_MINUS_2 :
+         // The camera goes backward
+         mCameraRho += 2.0f;
+         break;
+      case VK_PLUS : // Fall Through
+      case VK_PLUS_2 :
+         // The camera goes foward
+         mCameraRho -= 2.0f;
+         if (mCameraRho <= 1.0f)
+            mCameraRho = 1.0f;
+         break;
+      case VK_RIGHT :
+         mCameraTheta += DEG2RAD(2.0f);
+         break;
+      case VK_LEFT :
+         mCameraTheta -= DEG2RAD(2.0f);
+         break;
+      case VK_UP :
+         mCameraPhi -= DEG2RAD(2.0f);
+         break;
+      case VK_DOWN :
+         mCameraPhi += DEG2RAD(2.0f);
+         break;
+   }
+}
+
+void OpenGlApplication::windowResized(Window* window, INT width, INT height)
+{
+    updateViewport();
+}
+
 void OpenGlApplication::updateCamera()
 {
    mCameraX = mCameraRho * cos(mCameraTheta) * sin(mCameraPhi);
@@ -68,10 +111,28 @@ void OpenGlApplication::updateCamera()
 
 void OpenGlApplication::updateProjection()
 {
-    FLOAT height = (FLOAT) mWindow->getWidth();
-    if ( height != 0 )
-        gluPerspective(60.0, (FLOAT) mWindow->getWidth() / height, 0.1, 300.0);
+    FLOAT height = (FLOAT) mWindow->getHeight();
+    if (mIsPerspective)
+    {
+        if ( height != 0 )
+            gluPerspective(60.0, (FLOAT) mWindow->getWidth() / height, 0.1, 300.0);
+    } 
+    else
+    {
+        FLOAT width = (FLOAT) mWindow->getWidth();
+        if ( width <= height && width != 0.0 ) 
+            glOrtho(-10.0, 10.0, -10.0 * height / width, 10.0 * height / width, 0.01, 300.0);
+        else if ( height != 0.0 )
+            glOrtho(-10.0 * width / height, 10.0 * width / height, -10.0, 10.0, 0.01, 300.0);
+    }
 }
+
+void OpenGlApplication::updateViewport()
+{
+    glViewport(0, 0, mWindow->getWidth(), mWindow->getHeight());
+    draw();
+}
+
 
 void OpenGlApplication::updateWorld()
 {

@@ -21,18 +21,6 @@ public:
 
     inline Logger* getLogger();
 
-    virtual void   keyDown(Window* window, INT keyCode, INT repeat);
-    virtual void   keyUp(Window* window, INT keyCode);
-
-    virtual void   mousePressed(Window* window, INT button);
-    virtual void   mouseReleased(Window* window, INT button);
-    virtual void   mouseDoubleClicked(Window* window, INT button);
-
-    virtual void   mouseMoved(Window* window);
-    virtual void   mouseDragged(Window* window);
-
-    virtual void   mouseWheel(Window* window);
-
     virtual void   windowClosed(Window* window);
 
 protected:

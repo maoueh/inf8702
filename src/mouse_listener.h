@@ -1,3 +1,5 @@
+// TODO Need a MouseEvent
+
 #ifndef MOUSE_LISTENER_H
 #define MOUSE_LISTENER_H
 
@@ -14,14 +16,14 @@ class MouseListener
 public:
     virtual ~MouseListener() { };
 
-    virtual void mousePressed(Window* window, INT button);
-    virtual void mouseReleased(Window* window, INT button);
-    virtual void mouseDoubleClicked(Window* window, INT button);
+    virtual void mousePressed(Window* window, INT button, INT x, INT y);
+    virtual void mouseReleased(Window* window, INT button, INT x, INT y);
+    virtual void mouseDoubleClicked(Window* window, INT button, INT x, INT y);
 
-    virtual void mouseMoved(Window* window);
-    virtual void mouseDragged(Window* window);
+    virtual void mouseMoved(Window* window, INT x, INT y);
+    virtual void mouseDragged(Window* window, INT x, INT y);
 
-    virtual void mouseWheel(Window* window);
+    virtual void mouseWheel(Window* window, INT x, INT y);
 
 };
 

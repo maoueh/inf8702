@@ -1,5 +1,5 @@
-#ifndef TP1_APPLICATION_H
-#define TP1_APPLICATION_H
+#ifndef TP2_APPLICATION_H
+#define TP2_APPLICATION_H
 
 #include "color.h"
 #include "opengl_application.h"
@@ -7,11 +7,11 @@
 class ShaderProgram;
 class Window;
 
-class Tp1Application : public OpenGlApplication
+class Tp2Application : public OpenGlApplication
 {
 public:
-    Tp1Application(CommandLine* commandLine);
-    virtual ~Tp1Application();
+    Tp2Application(CommandLine* commandLine);
+    virtual ~Tp2Application();
 
 protected:
     virtual void    initialize();

@@ -53,9 +53,9 @@ private:
 
     BOOL    isAnyMouseButtonPressed();
 
-    void    notifyMousePressed(INT button);
-    void    notifyMouseReleased(INT button);
-    void    notifyMouseDoubleClicked(INT button);
+    void    notifyMousePressed(INT button, INT x, INT y);
+    void    notifyMouseReleased(INT button, INT x, INT y);
+    void    notifyMouseDoubleClicked(INT button, INT x, INT y);
 
 	HWND		              mHandle;
 	RECT		              mClientSize;

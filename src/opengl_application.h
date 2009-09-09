@@ -20,10 +20,17 @@ protected:
     virtual void    process();
     virtual STRING& getName() = 0;
 
+    virtual void    keyPressed(Window* window, int keyCode, int repeat);
+
+    virtual void    windowResized(Window* window, INT width, INT height);
+
     virtual void    draw() = 0;
     virtual void    updateCamera();
     virtual void    updateProjection();
+    virtual void    updateViewport();
     virtual void    updateWorld();
+
+    BOOL  mIsPerspective;
 
     // TODO Encapsulate
     FLOAT mCameraTheta;

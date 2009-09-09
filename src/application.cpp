@@ -35,11 +35,12 @@ void Application::initialize()
     mWindow = new Window("INF8702", getName().c_str(), mIsWindowed);
     mWindow->setRenderingContext(new RenderingContext());
 
+    mWindow->initialize(mIsWindowed);
+
     mWindow->addKeyboardListener(this);
     mWindow->addMouseListener(this);
     mWindow->addWindowListener(this);
 
-    mWindow->initialize(mIsWindowed);
     mWindow->show();
 }
 
@@ -79,46 +80,6 @@ void Application::consumeCommandLine()
             break;
         }
     } while (mCommandLine->hasMoreTokens());
-}
-
-void Application::keyDown(Window* window, INT keyCode, INT repeat)
-{
-    
-}
-
-void Application::keyUp(Window* window, INT keyCode)
-{
-    
-}
-
-void Application::mousePressed(Window* window, INT button)
-{
-
-}
-
-void Application::mouseReleased(Window* window, INT button)
-{
-
-}
-
-void Application::mouseDoubleClicked(Window* window, INT button)
-{
-
-}
-
-void Application::mouseMoved(Window* window)
-{
-    cout << "Mouse Moved" << endl;
-}
-
-void Application::mouseDragged(Window* window)
-{
-    cout << "Mouse Dragged" << endl;
-}
-
-void Application::mouseWheel(Window* window)
-{
-
 }
 
 void Application::windowClosed(Window* window)

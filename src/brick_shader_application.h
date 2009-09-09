@@ -17,6 +17,7 @@ protected:
 private:
     STRING mName;
 
+
 };
 
 #endif

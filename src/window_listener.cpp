@@ -5,3 +5,8 @@ void WindowListener::windowClosed(Window* window)
 {
 
 }
+
+void WindowListener::windowResized(Window* window, INT width, INT height)
+{
+
+}

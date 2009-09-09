@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="GameEngine"
-	ProjectGUID="{243001E1-7F74-470B-84C8-E5F24386E911}"
-	RootNamespace="GameEngine"
+	Name="Tp2"
+	ProjectGUID="{F0D04A91-A101-4A5B-87AE-81D8D7A2372D}"
+	RootNamespace="Tp2"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)\$(ProjectName)"
 			IntermediateDirectory="$(ConfigurationName)\$(ProjectName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -40,12 +40,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\lib\glew\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\..\src\&quot;;&quot;$(SolutionDir)..\..\lib\glew\include&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				ProgramDataBaseFileName="$(IntDir)\GameEngine.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -59,10 +57,17 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib glu32.lib glew32.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\lib\glew\bin&quot;"
+				GenerateDebugInformation="true"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -74,7 +79,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copy resources to output folder"
+				CommandLine="copy /Y &quot;$(SolutionDir)..\..\res\tp2\*&quot; &quot;$(SolutionDir)..\..\bin&quot; &amp;&amp; copy &quot;$(OutDir)\$(ProjectName).exe&quot; &quot;$(SolutionDir)..\..\bin&quot; "
 			/>
 		</Configuration>
 		<Configuration
@@ -149,6 +159,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{243001E1-7F74-470B-84C8-E5F24386E911}"
+			RelativePathToProject=".\GameEngine.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -157,153 +171,29 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\application.cpp"
+				RelativePath="..\..\src\tp2\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application_manager.cpp"
+				RelativePath="..\..\src\tp2\tp2_application.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\color.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\command_line.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\console_logger.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\fragment_shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\keyboard_listener.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\mouse_listener.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\opengl_application.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\rendering_context.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\shader_program.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\utils.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\vertex_shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\window.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\window_listener.cpp"
+				RelativePath="..\..\src\tp2\tp2_shader_program.cpp"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inc;xsd"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\src\application.h"
+				RelativePath="..\..\src\tp2\tp2_application.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application_manager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\color.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\command_line.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\common.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\console_logger.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\fragment_shader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\keyboard_listener.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\logger.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\mouse_listener.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\opengl_application.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\precompiled_headers.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\rendering_context.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\shader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\shader_program.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\types.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\utils.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\vertex_shader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\window.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\window_listener.h"
+				RelativePath="..\..\src\tp2\tp2_shader_program.h"
 				>
 			</File>
 		</Filter>
@@ -312,21 +202,12 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</Filter>
-		<Filter
-			Name="Inline Files"
-			Filter="inl;"
-			>
 			<File
-				RelativePath="..\..\src\application.inl"
+				RelativePath="..\..\res\tp2\tp2_fragment_shader.glsl"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\shader.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\window.inl"
+				RelativePath="..\..\res\tp2\tp2_vertex_shader.glsl"
 				>
 			</File>
 		</Filter>

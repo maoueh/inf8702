@@ -1,12 +1,12 @@
-#include "tp1_application.h"
-#include "tp1_shader_program.h"
+#include "tp2_application.h"
+#include "tp2_shader_program.h"
 
 #include "color.h"
 #include "logger.h"
 #include "window.h"
 
-Tp1Application::Tp1Application(CommandLine* commandLine) : OpenGlApplication(commandLine),
-    mName("Tp1 - INF8702"), 
+Tp2Application::Tp2Application(CommandLine* commandLine) : OpenGlApplication(commandLine),
+    mName("Tp2 - INF8702"), 
     mRotationAngleX(0.0), mRotationAngleY(0.0), mRotationAngleZ(0.0),
     mRotationFreqX(0.15f), mRotationFreqY(0.1f), mRotationFreqZ(0.2f),
     mAxisScaleFactor(15.0f), mAutomaticRotation(FALSE), mFramerate(50.0f),
@@ -16,24 +16,24 @@ Tp1Application::Tp1Application(CommandLine* commandLine) : OpenGlApplication(com
 
 }
 
-Tp1Application::~Tp1Application()
+Tp2Application::~Tp2Application()
 {
 }
 
-void Tp1Application::initialize()
+void Tp2Application::initialize()
 {
     OpenGlApplication::initialize();
 
-    // Compile Display List
-    compileQuadGridList(10.0f, 1, 1, TRUE);
-    compileCubeList(10.0f);
+   // Compile Display List
+   compileQuadGridList(10.0f, 1, 1, TRUE);
+   compileCubeList(10.0f);
 
-    // The Vertex and Fragment Shaders are initialized in the constructor
-    mShaderProgram = new Tp1ShaderProgram();
-    mShaderProgram->link();
+   // The Vertex and Fragment Shaders are initialized in the constructor
+   mShaderProgram = new Tp2ShaderProgram();
+   mShaderProgram->link();
 }
 
-void Tp1Application::compileCubeList(FLOAT size) 
+void Tp2Application::compileCubeList(FLOAT size) 
 {
     mCubeListId = glGenLists(1);
 	glNewList(mCubeListId, GL_COMPILE);
@@ -82,7 +82,7 @@ void Tp1Application::compileCubeList(FLOAT size)
 	glEndList();
 }
 
-void Tp1Application::compileQuadGridList(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal)
+void Tp2Application::compileQuadGridList(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal)
 {
     mQuadGridListId = glGenLists(1);
     glNewList(mQuadGridListId, GL_COMPILE);
@@ -90,7 +90,7 @@ void Tp1Application::compileQuadGridList(FLOAT size, INT rowCount, INT columnCou
     glEndList();
 }
 
-void Tp1Application::drawQuadGrid(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal) 
+void Tp2Application::drawQuadGrid(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal) 
 {
    INT normFact = isOutsideNormal ? 1 : -1;
    
@@ -138,7 +138,7 @@ void Tp1Application::drawQuadGrid(FLOAT size, INT rowCount, INT columnCount, BOO
    glEnd();
 }
 
-void Tp1Application::keyPressed(Window* window, INT keyCode, INT repeat)
+void Tp2Application::keyPressed(Window* window, INT keyCode, INT repeat)
 {
    FLOAT* component = NULL; 
    switch(keyCode) 
@@ -168,7 +168,7 @@ void Tp1Application::keyPressed(Window* window, INT keyCode, INT repeat)
     OpenGlApplication::keyPressed(window, keyCode, repeat);
 }
 
-void Tp1Application::mousePressed(Window* window, INT button, INT x, INT y)
+void Tp2Application::mousePressed(Window* window, INT button, INT x, INT y)
 {
     if ( button == MOUSE_BUTTON_LEFT )
     {
@@ -177,7 +177,7 @@ void Tp1Application::mousePressed(Window* window, INT button, INT x, INT y)
     }
 }
 
-void Tp1Application::mouseDragged(Window* window, INT x, INT y)
+void Tp2Application::mouseDragged(Window* window, INT x, INT y)
 {
     mRotationAngleX += y - mLastMouseY;
     mRotationAngleZ -= x - mLastMouseX;
@@ -186,7 +186,7 @@ void Tp1Application::mouseDragged(Window* window, INT x, INT y)
     mLastMouseY = y;
 }
 
-void Tp1Application::draw()
+void Tp2Application::draw()
 {
     if ( mIsShaderOn )
         mShaderProgram->use();
