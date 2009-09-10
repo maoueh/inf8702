@@ -3,19 +3,38 @@
 
 #include "color.h"
 #include "logger.h"
+#include "texture.h"
 #include "window.h"
 
 Tp2Application::Tp2Application(CommandLine* commandLine) : OpenGlApplication(commandLine),
     mName("Tp2 - INF8702"), 
-    mRotationAngleX(0.0), mRotationAngleY(0.0), mRotationAngleZ(0.0),
+    mRotationAngleX(0.0f), mRotationAngleY(0.0f), mRotationAngleZ(0.0f),
     mRotationFreqX(0.15f), mRotationFreqY(0.1f), mRotationFreqZ(0.2f),
     mAxisScaleFactor(15.0f), mAutomaticRotation(FALSE), mFramerate(50.0f),
-    mActiveColorComponent(RED_COMPONENT), mIsShaderOn(TRUE),
-    mIsSpotLightOn(TRUE), mIsDirectionalLightOn(TRUE), mIsPointLightOn(FALSE),
+    mActiveColorComponent(RED_COMPONENT), mIsShaderOn(FALSE),
+    mIsSpotLightOn(TRUE), mIsDirectionalLightOn(TRUE), mIsPointLightOn(TRUE),
     mFogColor(Color::BLACK), mCubeColor(Color::RED), 
+    mPointLightAmbient(0.0f, 0.0f, 0.0f), mPointLightDiffuse(1.0f, 0.5f, 1.0f),
+    mPointLightSpecular(1.0f, 0.5f, 1.0f), mPointLightEmission(1.0f, 1.0f, 1.0f),
+    mSpotLightAmbient(0.0f, 0.0f, 0.0f), mSpotLightDiffuse(1.0f, 1.0f, 1.0f),
+    mSpotLightSpecular(1.0f, 1.0f, 1.0f), mSpotLightEmission(1.0f, 1.0f, 1.0f),
+    mDirectionalLightAmbient(0.0f, 0.0f, 0.0f), mDirectionalLightDiffuse(0.86f, 0.69f, 0.04f),
+    mDirectionalLightSpecular(0.91f, 0.93f, 0.0f), mDirectionalLightEmission(1.0f, 1.0f, 1.0f),
+    mMaterialAmbient(0.0f, 0.0f, 0.0f), mMaterialDiffuse(1.0f, 1.0f, 1.0f),
+    mMaterialSpecular(1.0f, 1.0f, 1.0f), mMaterialEmission(0.0f, 0.0f, 0.0f),
     mLastMouseX(0), mLastMouseY(0)
 {
+     mPointLightPosition[0] = 20.0f;
+     mPointLightPosition[1] = 10.0f;
+     mPointLightPosition[2] = 3.0f;
+     mPointLightPosition[3] = 1.0f;
 
+     mDirectionalLightPosition[0] = -60.0f;
+     mDirectionalLightPosition[1] = 0.0f;
+     mDirectionalLightPosition[2] = 3.0f;
+     mDirectionalLightPosition[3] = 0.0f;
+
+     mMaterialShininess[0] = 100.0f;
 }
 
 Tp2Application::~Tp2Application()
@@ -33,11 +52,11 @@ void Tp2Application::initialize()
     // ajouter ici le mode de calcul séparé de la couleur spéculaire
     // ... 
 
-    //chargerTextures();
+    initializeTextures();
 
     // Compile Display List
-    compileQuadGridList(10.0f, 1, 1, TRUE);
-    compileCubeList(10.0f);
+    compileQuadGridList(15.0f, 30, 30, TRUE);
+    compileCubeList(15.0f);
 
     // The Vertex and Fragment Shaders are initialized in the constructor
     mShaderProgram = new Tp2ShaderProgram();
@@ -98,7 +117,7 @@ void Tp2Application::compileQuadGridList(FLOAT size, INT rowCount, INT columnCou
     mQuadGridListId = glGenLists(1);
     glNewList(mQuadGridListId, GL_COMPILE);
     {
-        //appliquerTextures();
+        applyTextures();
         drawQuadGrid(size, rowCount, columnCount, isOutsideNormal);
     }
     glEndList();
@@ -234,11 +253,11 @@ void Tp2Application::draw()
     {
         // Apply Material
         // TODO Define Material + Properties
-	    //glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambiant_model);
-	    //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse_model);
-	    //glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular_model);
-	    //glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat_emission_model);
-	    //glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess_model);
+	    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mMaterialAmbient.components);
+	    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mMaterialDiffuse.components);
+	    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mMaterialSpecular.components);
+	    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mMaterialEmission.components);
+	    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mMaterialShininess);
 
         if (mAutomaticRotation) 
         {
@@ -258,8 +277,8 @@ void Tp2Application::draw()
 
         glColor4f(0.0, 0.0, 1.0, 1.0);
 
-        glCallList(mCubeListId);
-        //desactiverTextures();
+        glCallList(mQuadGridListId);
+        deactivateTextures();
     }
     glPopMatrix();
 
@@ -307,155 +326,108 @@ void Tp2Application::draw()
     glFlush();
 }
 
-/* A Faire */
-////////////////////////////////////////////////////////////
-////////////  FONCTIONS POUR LES TEXTURES //////////////////
-////////////////////////////////////////////////////////////
-//void appliquerTextures()
-//{
-//   // ETAGE 0 (texture de mur)
-//   // ...
-//   // ...
-//  
-//    
-//   // ETAGE 1 (texture de rust)
-//   // ...
-//   // ...
-//
-//
-//   // ETAGE 2 (texture "paint job")
-//   // ...
-//   // ...
-//}
-//
-//
-//
-//SImage* LoadBMP( char *Filename )
-//{
-//    if( !Filename )
-//        return NULL;
-//
-//    FILE *file;
-//    unsigned int  width;
-//    unsigned int  height;
-//	unsigned long i;
-//	unsigned short int planes; // planes in image (must be 1) 
-//	unsigned short int bpp;    // bits per pixel (must be 24)
-//	
-//	// make sure the file is there.
-//	if( ( file = fopen( Filename, "rb" ) ) == NULL )
-//    {
-//		printf( "File Not Found : %s\n", Filename );
-//		return NULL;
-//	}
-//
-//	// seek through the bmp header, up to the width/height:
-//	fseek( file, 18, SEEK_CUR );
-//
-//	// read the width
-//	if( ( i = ( unsigned long )fread( &width, 4, 1, file ) ) != 1 )
-//    {
-//		printf( "Error reading width from %s.\n", Filename );
-//		return NULL;
-//	}
-//
-//	// read the height 
-//	if( ( i = ( unsigned long )fread( &height, 4, 1, file ) ) != 1 )
-//    {
-//		printf( "Error reading height from %s.\n", Filename );
-//		return NULL;
-//	}
-//
-//	// read the planes
-//	if( ( ( unsigned long )fread( &planes, 2, 1, file ) ) != 1 )
-//    {
-//		printf( "Error reading planes from %s.\n", Filename );
-//		return NULL;
-//	}
-//
-//	if( planes != 1 )
-//    {
-//		printf( "Planes from %s is not 1: %u\n", Filename, planes );
-//		return NULL;
-//	}
-//
-//	// read the bpp
-//	if( ( i = ( unsigned long )fread( &bpp, 2, 1, file ) ) != 1 )
-//    {
-//		printf("Error reading bpp from %s.\n", Filename );
-//		return NULL;
-//	}
-//
-//	if( bpp != 24 )
-//    {
-//		printf( "Bpp from %s is not 24: %u\n", Filename, bpp );
-//		return NULL;
-//	}
-//
-//	// seek past the rest of the bitmap header.
-//	fseek( file, 24, SEEK_CUR );
-//
-//	// read the data.
-//    SImage* Image = new SImage( width, height );
-//
-//	if( ( i = ( unsigned long )fread( Image->data, width * height * 3, 1, file ) ) != 1 )
-//    {
-//		printf("Error reading image data from %s.\n", Filename );
-//		delete Image;
-//		return NULL;
-//	}
-//
-//	return Image;
-//}
-//
-//
-//
-//void init2DTexture(GLint texName, GLint texWidth, GLint texHeight, GLubyte *texPtr)
-//{
-//   glBindTexture(GL_TEXTURE_2D, texName);
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_PRIORITY, 1.0); 
-//   glTexImage2D(GL_TEXTURE_2D, 0, 3, texWidth, texHeight, 0, GL_BGR, GL_UNSIGNED_BYTE, texPtr);
-//}
-//
-//
-//
-//void chargerTextures()
-//{	
-//   SImage* Image = NULL;
-//
-//   if( Image = LoadBMP("textures/stonewalldiffuse.bmp" ) )
-//   {
-//      glGenTextures( 1, &texture0 );	
-//      init2DTexture( texture0, Image->width, Image->height, Image->data );
-//      delete Image;
-//   }
-//
-//   if( Image = LoadBMP( "textures/rust.bmp" ) )
-//   {
-//      glGenTextures( 1, &texture1 );	
-//      init2DTexture( texture1, Image->width, Image->height, Image->data );
-//      delete Image;
-//   }
-//
-//   if( Image = LoadBMP( "textures/3dlabs.bmp" ) )
-//   {
-//      glGenTextures( 1, &texture2 );
-//      init2DTexture( texture2, Image->width, Image->height, Image->data );
-//      delete Image;
-//   }
-//}
-//
-//
-//void desactiverTextures()
-//{
-//   glActiveTexture(GL_TEXTURE0);
-//   glDisable(GL_TEXTURE_2D);
-//   glActiveTexture(GL_TEXTURE1);
-//   glDisable(GL_TEXTURE_2D);
-//   glActiveTexture(GL_TEXTURE2);
-//   glDisable(GL_TEXTURE_2D);
-//}
+void Tp2Application::updateWorld()
+{
+    updateLights();
+}
+
+void Tp2Application::updateLights()
+{
+    if (mIsPointLightOn) 
+    {
+        glLightfv(GL_LIGHT0, GL_AMBIENT, mPointLightAmbient.components);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, mPointLightDiffuse.components);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, mPointLightSpecular.components);
+        glLightfv(GL_LIGHT0, GL_EMISSION, mPointLightEmission.components);
+        glLightfv(GL_LIGHT0, GL_POSITION, mPointLightPosition);
+
+        glEnable(GL_LIGHT0);
+        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "pointLightOn"), 1);
+    }
+    else 
+    {
+        glDisable(GL_LIGHT0);
+        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "pointLightOn"), 0);
+    }
+
+    if (mIsSpotLightOn) 
+    {
+        FLOAT spotPosition[4] =  { mCameraX, mCameraY, mCameraZ, 1.0 };
+        FLOAT spotDirection[3] = { -mCameraX, -mCameraY, -mCameraZ };
+
+        glLightfv(GL_LIGHT1, GL_AMBIENT, mSpotLightAmbient.components);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, mSpotLightDiffuse.components);
+        glLightfv(GL_LIGHT1, GL_SPECULAR, mSpotLightSpecular.components);
+        glLightfv(GL_LIGHT1, GL_EMISSION, mSpotLightEmission.components);
+        glLightfv(GL_LIGHT1, GL_POSITION, spotPosition);
+        glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 1.0);
+        glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, 30.0); 
+        glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDirection); 
+
+        glEnable(GL_LIGHT1);
+        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "spotLightOn"), 1);
+    }
+    else 
+    {
+        glDisable(GL_LIGHT1);
+        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "spotLightOn"), 0);
+    }
+
+    if (mIsDirectionalLightOn) 
+    {
+        glLightfv(GL_LIGHT2, GL_AMBIENT, mDirectionalLightAmbient.components);
+        glLightfv(GL_LIGHT2, GL_DIFFUSE, mDirectionalLightDiffuse.components);
+        glLightfv(GL_LIGHT2, GL_SPECULAR, mDirectionalLightSpecular.components);
+        glLightfv(GL_LIGHT2, GL_EMISSION, mDirectionalLightEmission.components);
+        glLightfv(GL_LIGHT2, GL_POSITION, mDirectionalLightPosition);
+
+        glEnable(GL_LIGHT2);
+        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "dirLightOn"), 1);
+    }
+    else 
+    {
+        glDisable(GL_LIGHT2);
+        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "dirLightOn"), 0);
+    }
+}
+
+void Tp2Application::applyTextures()
+{
+   // ETAGE 0 (texture de mur)
+   // ...
+   // ...
+  
+    
+   // ETAGE 1 (texture de rust)
+   // ...
+   // ...
+
+
+   // ETAGE 2 (texture "paint job")
+   // ...
+   // ...
+}
+
+void Tp2Application::initializeTextures()
+{	
+    m3dLabsTexture = new Texture("3d_labs.bmp");
+    m3dLabsTexture->initialize();
+
+    mRustTexture = new Texture("rust.bmp");
+    mRustTexture->initialize();
+
+    mStonewallTexture = new Texture("stonewall_diffuse.bmp");
+    mStonewallTexture->initialize();
+}
+
+void Tp2Application::deactivateTextures()
+{
+   glActiveTexture(GL_TEXTURE0);
+   glDisable(GL_TEXTURE_2D);
+
+   glActiveTexture(GL_TEXTURE1);
+   glDisable(GL_TEXTURE_2D);
+
+   glActiveTexture(GL_TEXTURE2);
+   glDisable(GL_TEXTURE_2D);
+}

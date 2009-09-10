@@ -5,6 +5,7 @@
 #include "opengl_application.h"
 
 class ShaderProgram;
+class Texture;
 class Window;
 
 class Tp2Application : public OpenGlApplication
@@ -24,10 +25,18 @@ protected:
 
     virtual void    draw();
 
+    virtual void    updateWorld();
+
 private:
+    void initializeTextures();
+    void applyTextures();
+    void deactivateTextures();
+
     void compileCubeList(FLOAT size);
     void compileQuadGridList(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal);
     void drawQuadGrid(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal);
+
+    void updateLights();
 
     STRING mName;
     ShaderProgram* mShaderProgram;
@@ -36,12 +45,39 @@ private:
     INT mLastMouseX;
     INT mLastMouseY;
 
+    Texture* m3dLabsTexture;
+    Texture* mRustTexture;
+    Texture* mStonewallTexture;
+
     UINT mCubeListId;
     UINT mQuadGridListId;
 
     Color mCubeColor;
     Color mFogColor;
     INT   mActiveColorComponent;
+
+    FLOAT mPointLightPosition[4];
+    Color mPointLightAmbient;
+    Color mPointLightDiffuse;
+    Color mPointLightSpecular;
+    Color mPointLightEmission;
+
+    Color mSpotLightAmbient;
+    Color mSpotLightDiffuse;
+    Color mSpotLightSpecular;
+    Color mSpotLightEmission;
+
+    FLOAT mDirectionalLightPosition[4];
+    Color mDirectionalLightAmbient;
+    Color mDirectionalLightDiffuse;
+    Color mDirectionalLightSpecular;
+    Color mDirectionalLightEmission;
+
+    Color mMaterialAmbient;
+    Color mMaterialDiffuse;
+    Color mMaterialSpecular;
+    Color mMaterialEmission;
+    FLOAT mMaterialShininess[1];
 
     FLOAT mRotationAngleX;
     FLOAT mRotationAngleY;

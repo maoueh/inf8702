@@ -36,8 +36,7 @@ void OpenGlApplication::initialize()
 
     glDepthFunc(GL_LEQUAL);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void OpenGlApplication::process()
@@ -47,8 +46,8 @@ void OpenGlApplication::process()
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
-    updateWorld();
     updateCamera();
+    updateWorld();
 
     draw(); 
 

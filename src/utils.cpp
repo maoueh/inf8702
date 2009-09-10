@@ -11,6 +11,22 @@ template<typename T> STRING Utils::toString(const T &value)
 	return stream.str();		
 }
 
+STRING& Utils::toLowerCase(STRING& value)
+{
+    for (UINT i = 0; i < value.length(); ++i)
+        value[i] = tolower(value[i]);
+
+    return value;
+}
+
+STRING& Utils::toUpperCase(STRING& value)
+{
+    for (UINT i = 0; i < value.length(); ++i)
+        value[i] = toupper(value[i]);
+
+    return value;
+}
+
 // Warning : The resulting string is limited to 4096 characters
 STRING Utils::format(CHAR* stringFormat, ...)
 {	

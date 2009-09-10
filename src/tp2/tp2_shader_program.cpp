@@ -42,7 +42,7 @@ Tp2ShaderProgram::~Tp2ShaderProgram()
 
 void Tp2ShaderProgram::bindUniforms()
 {
-    /*glUniform1f(getUniformLocation("uRedComponent"), 1.0f);
-    glUniform1f(getUniformLocation("uGreenComponent"), 0.0f);
-    glUniform1f(getUniformLocation("uBlueComponent"), 0.0f);*/
+    glUniform1i(getUniformLocation("texUnit0"), 0);
+    glUniform1i(getUniformLocation("texUnit1"), 1);
+    glUniform1i(getUniformLocation("texUnit2"), 2);
 }

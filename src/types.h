@@ -4,6 +4,10 @@
 //#define BOOL  bool
 #define FLOAT float
 #define INT   int
+#define BYTE  unsigned char
+
+#define ULONG  unsigned long int
+#define USHORT unsigned short int
 
 //#define TRUE  true
 //#define FALSE true

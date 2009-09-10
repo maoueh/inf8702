@@ -24,6 +24,8 @@ void Tp1Application::initialize()
 {
     OpenGlApplication::initialize();
 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     // Compile Display List
     compileQuadGridList(10.0f, 1, 1, TRUE);
     compileCubeList(10.0f);
