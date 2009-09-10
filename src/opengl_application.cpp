@@ -29,12 +29,15 @@ void OpenGlApplication::initialize()
     glShadeModel(GL_SMOOTH);
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
+    glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_FOG);
 
     glDepthFunc(GL_LEQUAL);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 }
 
 void OpenGlApplication::process()

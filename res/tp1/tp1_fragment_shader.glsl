@@ -1,3 +1,5 @@
+#version 130
+
 uniform float uRedComponent, uGreenComponent, uBlueComponent;
 
 void main()

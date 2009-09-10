@@ -40,6 +40,7 @@ private:
     UINT mQuadGridListId;
 
     Color mCubeColor;
+    Color mFogColor;
     INT   mActiveColorComponent;
 
     FLOAT mRotationAngleX;
@@ -52,6 +53,10 @@ private:
 
     FLOAT mAxisScaleFactor;
     BOOL mAutomaticRotation;
+
+    BOOL mIsSpotLightOn;
+    BOOL mIsDirectionalLightOn;
+    BOOL mIsPointLightOn;
 
     FLOAT mFramerate;
 };
