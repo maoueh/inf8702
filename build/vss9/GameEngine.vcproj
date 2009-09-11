@@ -217,6 +217,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\texture_unit.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\utils.cpp"
 				>
 			</File>
@@ -315,6 +319,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\texture_unit.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\types.h"
 				>
 			</File>
@@ -351,6 +359,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\shader.inl"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\texture_unit.inl"
 				>
 			</File>
 			<File

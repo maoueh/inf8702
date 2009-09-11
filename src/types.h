@@ -8,12 +8,13 @@
 
 #define ULONG  unsigned long int
 #define USHORT unsigned short int
+#define UINT   unsigned int
 
 //#define TRUE  true
 //#define FALSE true
 //#define NULL  0
 
-#define MATCH 0
+#define MATCH   0
 
 // Text definitions
 #ifdef _UNICODE

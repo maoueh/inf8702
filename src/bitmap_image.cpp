@@ -19,7 +19,7 @@ BOOL BitmapImage::load()
     const CHAR* filename = mFilename.c_str();
 	
 	// Make sure the file is there.
-    if( (file = fopen( filename, "rb" )) == NULL )
+    if( fopen_s(&file, filename, "rb") != FALSE )
     {
         ApplicationManager::get()->log("File Not Found : %s", filename);
 		return FALSE;

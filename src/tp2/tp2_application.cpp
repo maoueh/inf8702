@@ -3,26 +3,27 @@
 
 #include "color.h"
 #include "logger.h"
-#include "texture.h"
+#include "texture_unit.h"
 #include "window.h"
 
 Tp2Application::Tp2Application(CommandLine* commandLine) : OpenGlApplication(commandLine),
-    mName("Tp2 - INF8702"), 
-    mRotationAngleX(0.0f), mRotationAngleY(0.0f), mRotationAngleZ(0.0f),
-    mRotationFreqX(0.15f), mRotationFreqY(0.1f), mRotationFreqZ(0.2f),
-    mAxisScaleFactor(15.0f), mAutomaticRotation(FALSE), mFramerate(50.0f),
-    mActiveColorComponent(RED_COMPONENT), mIsShaderOn(FALSE),
-    mIsSpotLightOn(TRUE), mIsDirectionalLightOn(TRUE), mIsPointLightOn(TRUE),
-    mFogColor(Color::BLACK), mCubeColor(Color::RED), 
-    mPointLightAmbient(0.0f, 0.0f, 0.0f), mPointLightDiffuse(1.0f, 0.5f, 1.0f),
-    mPointLightSpecular(1.0f, 0.5f, 1.0f), mPointLightEmission(1.0f, 1.0f, 1.0f),
-    mSpotLightAmbient(0.0f, 0.0f, 0.0f), mSpotLightDiffuse(1.0f, 1.0f, 1.0f),
-    mSpotLightSpecular(1.0f, 1.0f, 1.0f), mSpotLightEmission(1.0f, 1.0f, 1.0f),
-    mDirectionalLightAmbient(0.0f, 0.0f, 0.0f), mDirectionalLightDiffuse(0.86f, 0.69f, 0.04f),
+    mName("Tp2 - INF8702"),  
+    mRotationAngleX(0.0f),    mRotationAngleY(0.0f),       mRotationAngleZ(0.0f),
+    mRotationFreqX(0.15f),    mRotationFreqY(0.1f),        mRotationFreqZ(0.2f),
+    mAxisScaleFactor(15.0f),  mAutomaticRotation(FALSE),   mFramerate(50.0f),
+    mIsSpotLightOn(TRUE),     mIsDirectionalLightOn(TRUE), mIsPointLightOn(TRUE),
+    m3dLabsTextureUnit(NULL), mRustTextureUnit(NULL),      mStonewallTextureUnit(NULL),
+    mPointLightAmbient(0.0f, 0.0f, 0.0f),          mPointLightDiffuse(1.0f, 0.5f, 1.0f),
+    mPointLightSpecular(1.0f, 0.5f, 1.0f),         mPointLightEmission(1.0f, 1.0f, 1.0f),
+    mSpotLightAmbient(0.0f, 0.0f, 0.0f),           mSpotLightDiffuse(1.0f, 1.0f, 1.0f),
+    mSpotLightSpecular(1.0f, 1.0f, 1.0f),          mSpotLightEmission(1.0f, 1.0f, 1.0f),
+    mDirectionalLightAmbient(0.0f, 0.0f, 0.0f),    mDirectionalLightDiffuse(0.86f, 0.69f, 0.04f),
     mDirectionalLightSpecular(0.91f, 0.93f, 0.0f), mDirectionalLightEmission(1.0f, 1.0f, 1.0f),
-    mMaterialAmbient(0.0f, 0.0f, 0.0f), mMaterialDiffuse(1.0f, 1.0f, 1.0f),
-    mMaterialSpecular(1.0f, 1.0f, 1.0f), mMaterialEmission(0.0f, 0.0f, 0.0f),
-    mLastMouseX(0), mLastMouseY(0)
+    mMaterialAmbient(0.0f, 0.0f, 0.0f),            mMaterialDiffuse(1.0f, 1.0f, 1.0f),
+    mMaterialSpecular(1.0f, 1.0f, 1.0f),           mMaterialEmission(0.0f, 0.0f, 0.0f),
+    mActiveColorComponent(RED_COMPONENT),          mIsShaderOn(FALSE),
+    mFogColor(Color::BLACK),                       mCubeColor(Color::RED), 
+    mLastMouseX(0),                                mLastMouseY(0)
 {
      mPointLightPosition[0] = 20.0f;
      mPointLightPosition[1] = 10.0f;
@@ -393,31 +394,25 @@ void Tp2Application::updateLights()
 
 void Tp2Application::applyTextures()
 {
-   // ETAGE 0 (texture de mur)
-   // ...
-   // ...
-  
-    
-   // ETAGE 1 (texture de rust)
-   // ...
-   // ...
-
-
-   // ETAGE 2 (texture "paint job")
-   // ...
-   // ...
+   mStonewallTextureUnit->activate();
+   mRustTextureUnit->activate();
+   m3dLabsTextureUnit->activate();
 }
 
 void Tp2Application::initializeTextures()
 {	
-    m3dLabsTexture = new Texture("3d_labs.bmp");
-    m3dLabsTexture->initialize();
+    mStonewallTextureUnit = new TextureUnit(GL_TEXTURE0, "stonewall_diffuse.bmp");
+    mStonewallTextureUnit->initialize();
+    mStonewallTextureUnit->addCombiner(GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    mRustTexture = new Texture("rust.bmp");
-    mRustTexture->initialize();
+    mRustTextureUnit = new TextureUnit(GL_TEXTURE1, "rust.bmp");
+    mRustTextureUnit->initialize();
+    mRustTextureUnit->addCombiner(GL_TEXTURE_ENV_MODE, GL_COMBINE);
+    mRustTextureUnit->addCombiner(GL_COMBINE_RGB, GL_MODULATE);
 
-    mStonewallTexture = new Texture("stonewall_diffuse.bmp");
-    mStonewallTexture->initialize();
+    m3dLabsTextureUnit = new TextureUnit(GL_TEXTURE2, "3d_labs.bmp");
+    m3dLabsTextureUnit->initialize();
+    m3dLabsTextureUnit->addCombiner(GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
 void Tp2Application::deactivateTextures()

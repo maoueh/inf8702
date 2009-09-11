@@ -5,7 +5,7 @@
 #include "opengl_application.h"
 
 class ShaderProgram;
-class Texture;
+class TextureUnit;
 class Window;
 
 class Tp2Application : public OpenGlApplication
@@ -45,9 +45,9 @@ private:
     INT mLastMouseX;
     INT mLastMouseY;
 
-    Texture* m3dLabsTexture;
-    Texture* mRustTexture;
-    Texture* mStonewallTexture;
+    TextureUnit* m3dLabsTextureUnit;
+    TextureUnit* mRustTextureUnit;
+    TextureUnit* mStonewallTextureUnit;
 
     UINT mCubeListId;
     UINT mQuadGridListId;
