@@ -38,7 +38,7 @@ public:
 class Tp2ShaderProgram : public ShaderProgram
 {
 public:
-    Tp2ShaderProgram();
+    Tp2ShaderProgram(BOOL* isPointLightOn, BOOL* isSpotLightOn, BOOL* isDirectionalLightOn);
     virtual ~Tp2ShaderProgram();
 
     virtual void bindUniforms();
@@ -46,6 +46,10 @@ public:
 private:
     Tp2FragmentShader* mFragmentShader;
     Tp2VertexShader* mVertexShader;
+
+    BOOL* mIsPointLightOn;
+    BOOL* mIsSpotLightOn;
+    BOOL* mIsDirectionalLightOn;
 };
 
 #endif

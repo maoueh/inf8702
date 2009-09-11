@@ -22,7 +22,10 @@ void Tp2VertexShader::bindAttributes(UINT programHandle)
 /// Shader Program
 //
 
-Tp2ShaderProgram::Tp2ShaderProgram() : ShaderProgram()
+Tp2ShaderProgram::Tp2ShaderProgram(BOOL* isPointLightOn, BOOL* isSpotLightOn, 
+                                   BOOL* isDirectionalLightOn) : ShaderProgram(),
+    mIsPointLightOn(isPointLightOn),             mIsSpotLightOn(isSpotLightOn), 
+    mIsDirectionalLightOn(isDirectionalLightOn)
 {
     mFragmentShader = new Tp2FragmentShader();
     mVertexShader = new Tp2VertexShader();
@@ -42,7 +45,12 @@ Tp2ShaderProgram::~Tp2ShaderProgram()
 
 void Tp2ShaderProgram::bindUniforms()
 {
+    // TODO getUniformLocation should cache uniform location
     glUniform1i(getUniformLocation("texUnit0"), 0);
     glUniform1i(getUniformLocation("texUnit1"), 1);
     glUniform1i(getUniformLocation("texUnit2"), 2);
+
+    glUniform1i(getUniformLocation("uIsPointLightOn"), *mIsPointLightOn);
+    glUniform1i(getUniformLocation("uIsSpotLightOn"), *mIsSpotLightOn);
+    glUniform1i(getUniformLocation("uIsDirectionalLightOn"), *mIsDirectionalLightOn);
 }

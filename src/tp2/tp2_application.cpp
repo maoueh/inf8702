@@ -60,7 +60,7 @@ void Tp2Application::initialize()
     compileCubeList(15.0f);
 
     // The Vertex and Fragment Shaders are initialized in the constructor
-    mShaderProgram = new Tp2ShaderProgram();
+    mShaderProgram = new Tp2ShaderProgram(&mIsPointLightOn, &mIsSpotLightOn, &mIsDirectionalLightOn);
     mShaderProgram->link();
 }
 
@@ -336,13 +336,12 @@ void Tp2Application::updateLights()
 {
     if (mIsPointLightOn) 
     {
+        glEnable(GL_LIGHT0);
         glLightfv(GL_LIGHT0, GL_AMBIENT, mPointLightAmbient.components);
         glLightfv(GL_LIGHT0, GL_DIFFUSE, mPointLightDiffuse.components);
         glLightfv(GL_LIGHT0, GL_SPECULAR, mPointLightSpecular.components);
         glLightfv(GL_LIGHT0, GL_EMISSION, mPointLightEmission.components);
         glLightfv(GL_LIGHT0, GL_POSITION, mPointLightPosition);
-
-        glEnable(GL_LIGHT0);
         //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "pointLightOn"), 1);
     }
     else 
@@ -356,6 +355,7 @@ void Tp2Application::updateLights()
         FLOAT spotPosition[4] =  { mCameraX, mCameraY, mCameraZ, 1.0 };
         FLOAT spotDirection[3] = { -mCameraX, -mCameraY, -mCameraZ };
 
+        glEnable(GL_LIGHT1);
         glLightfv(GL_LIGHT1, GL_AMBIENT, mSpotLightAmbient.components);
         glLightfv(GL_LIGHT1, GL_DIFFUSE, mSpotLightDiffuse.components);
         glLightfv(GL_LIGHT1, GL_SPECULAR, mSpotLightSpecular.components);
@@ -364,8 +364,6 @@ void Tp2Application::updateLights()
         glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 1.0);
         glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, 30.0); 
         glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDirection); 
-
-        glEnable(GL_LIGHT1);
         //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "spotLightOn"), 1);
     }
     else 
@@ -376,13 +374,12 @@ void Tp2Application::updateLights()
 
     if (mIsDirectionalLightOn) 
     {
+        glEnable(GL_LIGHT2);
         glLightfv(GL_LIGHT2, GL_AMBIENT, mDirectionalLightAmbient.components);
         glLightfv(GL_LIGHT2, GL_DIFFUSE, mDirectionalLightDiffuse.components);
         glLightfv(GL_LIGHT2, GL_SPECULAR, mDirectionalLightSpecular.components);
         glLightfv(GL_LIGHT2, GL_EMISSION, mDirectionalLightEmission.components);
         glLightfv(GL_LIGHT2, GL_POSITION, mDirectionalLightPosition);
-
-        glEnable(GL_LIGHT2);
         //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "dirLightOn"), 1);
     }
     else 
@@ -404,11 +401,19 @@ void Tp2Application::initializeTextures()
     mStonewallTextureUnit = new TextureUnit(GL_TEXTURE0, "stonewall_diffuse.bmp");
     mStonewallTextureUnit->initialize();
     mStonewallTextureUnit->addCombiner(GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    //mStonewallTextureUnit->addCombiner(GL_SOURCE0_RGB, GL_TEXTURE0);
+
+  //glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+  //glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
 
     mRustTextureUnit = new TextureUnit(GL_TEXTURE1, "rust.bmp");
     mRustTextureUnit->initialize();
-    mRustTextureUnit->addCombiner(GL_TEXTURE_ENV_MODE, GL_COMBINE);
-    mRustTextureUnit->addCombiner(GL_COMBINE_RGB, GL_MODULATE);
+    mRustTextureUnit->addCombiner(GL_TEXTURE_ENV_MODE, GL_COMBINE).
+                      addCombiner(GL_COMBINE_RGB, GL_MODULATE).
+                      addCombiner(GL_SOURCE0_RGB, GL_TEXTURE).
+                      addCombiner(GL_SOURCE1_RGB, GL_PREVIOUS);
+
+    mStonewallTextureUnit->addCombiner(GL_SOURCE0_RGB, GL_TEXTURE0);
 
     m3dLabsTextureUnit = new TextureUnit(GL_TEXTURE2, "3d_labs.bmp");
     m3dLabsTextureUnit->initialize();
@@ -417,12 +422,12 @@ void Tp2Application::initializeTextures()
 
 void Tp2Application::deactivateTextures()
 {
-   glActiveTexture(GL_TEXTURE0);
-   glDisable(GL_TEXTURE_2D);
-
    glActiveTexture(GL_TEXTURE1);
    glDisable(GL_TEXTURE_2D);
 
    glActiveTexture(GL_TEXTURE2);
+   glDisable(GL_TEXTURE_2D);
+
+   glActiveTexture(GL_TEXTURE0);
    glDisable(GL_TEXTURE_2D);
 }

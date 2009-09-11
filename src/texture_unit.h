@@ -28,7 +28,7 @@ public:
 
     virtual void activate();
 
-    void addCombiner(UINT id, INT value);
+    TextureUnit& addCombiner(UINT id, INT value);
     void removeCombiner(UINT id, INT value);
 
     inline void setTextureMode(INT mode);

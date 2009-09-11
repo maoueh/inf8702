@@ -14,6 +14,7 @@ TextureUnit::~TextureUnit()
 void TextureUnit::activate()
 {
     glActiveTexture(mUnitId);
+    glEnable(GL_TEXTURE_2D); // TODO Is it better to not call it and assume it is already enabled ?
     glBindTexture(GL_TEXTURE_2D, mHandle);
 
     vector<TextureUnitCombiner>::iterator it = mCombiners.begin();
@@ -24,9 +25,10 @@ void TextureUnit::activate()
     }
 }
 
-void TextureUnit::addCombiner(UINT id, INT value)
+TextureUnit& TextureUnit::addCombiner(UINT id, INT value)
 {
     mCombiners.push_back(TextureUnitCombiner(id, value));
+    return *this;
 }
 
 void TextureUnit::removeCombiner(UINT id, INT value)
