@@ -33,6 +33,7 @@ public:
 	inline void    show();
 	inline void    hide();
 
+    inline void    invalidate();
     inline void    swapBuffers();
 
     inline HWND	   getHandle();

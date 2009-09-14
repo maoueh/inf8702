@@ -5,7 +5,8 @@
 
 OpenGlApplication::OpenGlApplication(CommandLine* commandLine) : Application(commandLine),
     mCameraTheta(DEG2RAD(270.0f)), mCameraPhi(DEG2RAD(90.0f)), mCameraRho(30.0f),
-    mCameraX(0.0), mCameraY(0.0), mCameraZ(0.0), mIsPerspective(TRUE)
+    mCameraX(0.0),                 mCameraY(0.0),              mCameraZ(0.0), 
+    mIsPerspective(TRUE),          mFramerate(50)
 {
 
 }
@@ -137,6 +138,11 @@ void OpenGlApplication::updateViewport()
 
 
 void OpenGlApplication::updateWorld()
+{
+
+}
+
+void OpenGlApplication::idle()
 {
 
 }

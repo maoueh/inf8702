@@ -29,8 +29,14 @@ protected:
     virtual void    updateProjection();
     virtual void    updateViewport();
     virtual void    updateWorld();
+    virtual void    idle(); // TODO Default behavior not implemented right now
+
+    // A value of -1 is considered as infinite (or non-blocked) framerate
+    void setFramerate(INT framerate);
 
     BOOL  mIsPerspective;
+
+    INT   mFramerate;
 
     // TODO Encapsulate
     FLOAT mCameraTheta;

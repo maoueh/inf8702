@@ -9,6 +9,11 @@ void Window::hide()
 	ShowWindow( mHandle, SW_HIDE );
 }
 
+void Window::invalidate()
+{
+    InvalidateRect(mHandle, NULL, TRUE);
+}
+
 void Window::swapBuffers()
 {
     mRenderingContext->swapBuffers();

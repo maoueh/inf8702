@@ -6,11 +6,12 @@
 #include "texture_unit.h"
 #include "window.h"
 
+#define FOG_DELTA 10.0f
+
 Tp2Application::Tp2Application(CommandLine* commandLine) : OpenGlApplication(commandLine),
     mName("Tp2 - INF8702"),  
     mRotationAngleX(0.0f),    mRotationAngleY(0.0f),       mRotationAngleZ(0.0f),
     mRotationFreqX(0.15f),    mRotationFreqY(0.1f),        mRotationFreqZ(0.2f),
-    mAxisScaleFactor(15.0f),  mAutomaticRotation(FALSE),   mFramerate(50.0f),
     mIsSpotLightOn(TRUE),     mIsDirectionalLightOn(TRUE), mIsPointLightOn(TRUE),
     m3dLabsTextureUnit(NULL), mRustTextureUnit(NULL),      mStonewallTextureUnit(NULL),
     mPointLightAmbient(0.0f, 0.0f, 0.0f),          mPointLightDiffuse(1.0f, 0.5f, 1.0f),
@@ -23,7 +24,8 @@ Tp2Application::Tp2Application(CommandLine* commandLine) : OpenGlApplication(com
     mMaterialSpecular(1.0f, 1.0f, 1.0f),           mMaterialEmission(0.0f, 0.0f, 0.0f),
     mActiveColorComponent(RED_COMPONENT),          mIsShaderOn(FALSE),
     mFogColor(Color::BLACK),                       mCubeColor(Color::RED), 
-    mLastMouseX(0),                                mLastMouseY(0)
+    mLastMouseX(0),                                mLastMouseY(0),
+    mAxisScaleFactor(15.0f),                       mAutomaticRotation(FALSE)
 {
      mPointLightPosition[0] = 20.0f;
      mPointLightPosition[1] = 10.0f;
@@ -46,71 +48,20 @@ void Tp2Application::initialize()
 {
     OpenGlApplication::initialize();
 
-    glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );
-    glLightModeli( GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE );     // Two-side mode in OpenGL
-    glEnable( GL_VERTEX_PROGRAM_TWO_SIDE );                // Two-side mode in GLSL
-
-    // ajouter ici le mode de calcul séparé de la couleur spéculaire
-    // ... 
+    // Separate calculation of the specular contribution after texturing is done
+    glLightModeli( GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR ); 
+    glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE ); 
+    glLightModeli( GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE ); // Two-side mode in OpenGL
+    glEnable( GL_VERTEX_PROGRAM_TWO_SIDE );            // Two-side mode in GLSL            
 
     initializeTextures();
 
     // Compile Display List
-    compileQuadGridList(15.0f, 30, 30, TRUE);
-    compileCubeList(15.0f);
+    compileQuadGridList(20.0f, 30, 30, TRUE);
 
     // The Vertex and Fragment Shaders are initialized in the constructor
     mShaderProgram = new Tp2ShaderProgram(&mIsPointLightOn, &mIsSpotLightOn, &mIsDirectionalLightOn);
     mShaderProgram->link();
-}
-
-void Tp2Application::compileCubeList(FLOAT size) 
-{
-    mCubeListId = glGenLists(1);
-	glNewList(mCubeListId, GL_COMPILE);
-	{
-	  // Front Face
-	  glPushMatrix();
-		 glTranslatef(0.0f, size / 2.0f, 0.0f);
-		 glCallList(mQuadGridListId);
-	  glPopMatrix();
-
-	  // Back Face
-	  glPushMatrix();
-		 glTranslatef(0.0f, -size / 2.0f, 0.0f);
-		 glRotatef(180.0, 0.0, 0.0, 1.0);
-		 glCallList(mQuadGridListId);
-	  glPopMatrix();
-
-	  // Left Face
-	  glPushMatrix();
-		 glTranslatef(-size / 2.0f, 0.0f, 0.0f);
-		 glRotatef(90.0, 0.0, 0.0, 1.0);
-		 glCallList(mQuadGridListId);
-	  glPopMatrix();
-
-	  // Right Face
-	  glPushMatrix();
-		 glTranslatef(size / 2.0f, 0.0f, 0.0f);
-		 glRotatef(-90.0, 0.0, 0.0, 1.0);
-		 glCallList(mQuadGridListId);
-	  glPopMatrix();
-
-	  // Down Face
-	  glPushMatrix();
-		 glTranslatef(0.0f, 0.0f, size / 2.0f);
-		 glRotatef(90.0, 1.0, 0.0, 0.0);
-		 glCallList(mQuadGridListId);
-	  glPopMatrix();
-
-	  // Up Face
-	  glPushMatrix();
-		 glTranslatef(0.0f, 0.0f, -size / 2.0f);
-		 glRotatef(-90.0, 1.0, 0.0, 0.0);
-		 glCallList(mQuadGridListId);
-	  glPopMatrix();
-	}
-	glEndList();
 }
 
 void Tp2Application::compileQuadGridList(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal)
@@ -234,13 +185,9 @@ void Tp2Application::mouseDragged(Window* window, INT x, INT y)
 
 void Tp2Application::draw()
 {
-    // ajuster le fog dynamiquement selon la distance de l'observateur
-    // vous devez ici l'améliorer... pour que les paramètres
-    // GL_FOG_START et GL_FOG_END soient ajustés automatiquement
-    // en fonction du zoom.
 	glFogi (GL_FOG_MODE,    GL_LINEAR);
-	glFogf (GL_FOG_START,   30.0);
-	glFogf (GL_FOG_END,     40.0);
+    glFogf (GL_FOG_START,   mCameraRho);
+	glFogf (GL_FOG_END,     mCameraRho + FOG_DELTA);
     glFogfv(GL_FOG_COLOR,   mFogColor.components);
 	glFogf (GL_FOG_DENSITY, 1.0);
 
@@ -342,13 +289,9 @@ void Tp2Application::updateLights()
         glLightfv(GL_LIGHT0, GL_SPECULAR, mPointLightSpecular.components);
         glLightfv(GL_LIGHT0, GL_EMISSION, mPointLightEmission.components);
         glLightfv(GL_LIGHT0, GL_POSITION, mPointLightPosition);
-        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "pointLightOn"), 1);
     }
     else 
-    {
         glDisable(GL_LIGHT0);
-        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "pointLightOn"), 0);
-    }
 
     if (mIsSpotLightOn) 
     {
@@ -364,13 +307,9 @@ void Tp2Application::updateLights()
         glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 1.0);
         glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, 30.0); 
         glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDirection); 
-        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "spotLightOn"), 1);
     }
     else 
-    {
         glDisable(GL_LIGHT1);
-        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "spotLightOn"), 0);
-    }
 
     if (mIsDirectionalLightOn) 
     {
@@ -380,13 +319,9 @@ void Tp2Application::updateLights()
         glLightfv(GL_LIGHT2, GL_SPECULAR, mDirectionalLightSpecular.components);
         glLightfv(GL_LIGHT2, GL_EMISSION, mDirectionalLightEmission.components);
         glLightfv(GL_LIGHT2, GL_POSITION, mDirectionalLightPosition);
-        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "dirLightOn"), 1);
     }
     else 
-    {
         glDisable(GL_LIGHT2);
-        //glUniform1i(glGetUniformLocation(fixedPipelineShaderProg, "dirLightOn"), 0);
-    }
 }
 
 void Tp2Application::applyTextures()
@@ -401,10 +336,6 @@ void Tp2Application::initializeTextures()
     mStonewallTextureUnit = new TextureUnit(GL_TEXTURE0, "stonewall_diffuse.bmp");
     mStonewallTextureUnit->initialize();
     mStonewallTextureUnit->addCombiner(GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    //mStonewallTextureUnit->addCombiner(GL_SOURCE0_RGB, GL_TEXTURE0);
-
-  //glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-  //glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
 
     mRustTextureUnit = new TextureUnit(GL_TEXTURE1, "rust.bmp");
     mRustTextureUnit->initialize();
@@ -412,8 +343,6 @@ void Tp2Application::initializeTextures()
                       addCombiner(GL_COMBINE_RGB, GL_MODULATE).
                       addCombiner(GL_SOURCE0_RGB, GL_TEXTURE).
                       addCombiner(GL_SOURCE1_RGB, GL_PREVIOUS);
-
-    mStonewallTextureUnit->addCombiner(GL_SOURCE0_RGB, GL_TEXTURE0);
 
     m3dLabsTextureUnit = new TextureUnit(GL_TEXTURE2, "3d_labs.bmp");
     m3dLabsTextureUnit->initialize();

@@ -1,7 +1,7 @@
 BUILD
 
  Une seule option est offerte pour le processus de build pour l'instant, Visual 
- Studio 2009. La solution se trouve dans "build\vss9\GameEngine.sln".
+ Studio 2008. La solution se trouve dans "build\vss9\GameEngine.sln".
 
 EXECUTION
 
@@ -11,9 +11,9 @@ EXECUTION
  se trouve dans Configuration Properties -> Debugging. La valeur de ce champ 
  doit être "$(SolutionDir)..\..\bin" pour chaque projet que vous voulez 
  exécuter et pour chaque configuration. Visual Studio offre la possibilité de 
- changer les propriétés de plusieurs projets simultanément ainsi que pour
- chaque configuration. Il est donc possible d'assigner la bonne valeur pour
- tout les projets et configurations d'un seul coup.
+ changer les propriétés de plusieurs projets et configurations simultanément. 
+ Il est donc possible d'assigner la bonne valeur pour tout les projets et 
+ configurations d'un seul coup.
 
  Depuis l'exécutable généré
 

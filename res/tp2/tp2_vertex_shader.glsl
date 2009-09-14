@@ -12,7 +12,7 @@ vec4 Ambient;
 vec4 Diffuse;
 vec4 Specular;
 
-void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
+void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3, in float shininess)
 {
    float nDotVP;       // normal . light direction
    float nDotHV;       // normal . light half vector
@@ -47,7 +47,7 @@ void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
    }
    else
    {
-       pf = pow(nDotHV, gl_FrontMaterial.shininess);
+       pf = pow(nDotHV, shininess);
 
    }
    Ambient  += gl_LightSource[i].ambient * attenuation;
@@ -55,7 +55,7 @@ void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
    Specular += gl_LightSource[i].specular * pf * attenuation;
 }
 
-void spotLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
+void spotLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3, in float shininess)
 {
    float nDotVP;            // normal . light direction
    float nDotHV;            // normal . light half vector
@@ -107,7 +107,7 @@ void spotLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
    }
    else
    {
-       pf = pow(nDotHV, gl_FrontMaterial.shininess);
+       pf = pow(nDotHV, shininess);
 
    }
    Ambient  += gl_LightSource[i].ambient * attenuation;
@@ -116,7 +116,7 @@ void spotLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
 
 }
 
-void directionalLight(in int i, in vec3 normal)
+void directionalLight(in int i, in vec3 normal, in float shininess)
 {
    float nDotVP;         // normal . light direction
    float nDotHV;         // normal . light half vector
@@ -131,7 +131,7 @@ void directionalLight(in int i, in vec3 normal)
    }
    else
    {
-       pf = pow(nDotHV, gl_FrontMaterial.shininess);
+       pf = pow(nDotHV, shininess);
 
    }
    Ambient  += gl_LightSource[i].ambient;
@@ -154,47 +154,63 @@ vec3 fnormal(void)
 
 void ftexgen(in vec3 normal, in vec4 ecPosition)
 {
-
     gl_TexCoord[0] = gl_MultiTexCoord0;
-
     gl_TexCoord[1] = gl_MultiTexCoord1;
-
     gl_TexCoord[2] = gl_MultiTexCoord2;
 }
 
-void flight(in vec3 normal, in vec4 ecPosition, float alphaFade)
+void computeLightContributions(in vec3 normal, in vec3 ecPosition3, in vec3 eye, in float shininess)
 {
-    vec4 color;
-    vec3 ecPosition3;
-    vec3 eye;
-
-    ecPosition3 = (vec3 (ecPosition)) / ecPosition.w;
-    eye = vec3 (0.0, 0.0, 1.0);
-
-    // Clear the light intensity accumulators
-    Ambient  = vec4 (0.0);
-    Diffuse  = vec4 (0.0);
-    Specular = vec4 (0.0);
-
+	// Clear ambient, diffuse and specular contributions
+    Ambient  = vec4(0.0);
+    Diffuse  = vec4(0.0);
+    Specular = vec4(0.0);
+    
     if ( uIsPointLightOn )
-		pointLight(0, normal, eye, ecPosition3);
+		pointLight(0, normal, eye, ecPosition3, shininess);
 
 	if ( uIsSpotLightOn )
-		spotLight(1, normal, eye, ecPosition3);
+		spotLight(1, normal, eye, ecPosition3, shininess);
 
 	if ( uIsDirectionalLightOn )
-		directionalLight(2, normal);
-
-    color = gl_FrontLightModelProduct.sceneColor +
-      Ambient * gl_FrontMaterial.ambient +
-      Diffuse * gl_FrontMaterial.diffuse;
-    gl_FrontSecondaryColor = Specular * gl_FrontMaterial.specular;
-    color = clamp( color, 0.0, 1.0 );
-    gl_FrontColor = color;
-
-    gl_FrontColor.a *= alphaFade;
+		directionalLight(2, normal, shininess);
 }
 
+void frontLightning(in vec3 normal, in vec3 ecPosition3, in vec3 eye, in float alphaFade)
+{
+    computeLightContributions(normal, ecPosition3, eye, gl_FrontMaterial.shininess);
+    vec4 color = clamp(gl_FrontLightModelProduct.sceneColor +
+                       Ambient * gl_FrontMaterial.ambient +
+                       Diffuse * gl_FrontMaterial.diffuse,
+                       0.0, 1.0);
+    
+    gl_FrontColor = color;
+    gl_FrontColor.a *= alphaFade;
+    gl_FrontSecondaryColor = Specular * gl_FrontMaterial.specular;
+}
+
+void backLightning(in vec3 normal, in vec3 ecPosition3, in vec3 eye, in float alphaFade)
+{
+    computeLightContributions(normal, ecPosition3, eye, gl_BackMaterial.shininess);
+    vec4 color = clamp(gl_BackLightModelProduct.sceneColor +
+		               Ambient * gl_BackMaterial.ambient +
+                       Diffuse * gl_BackMaterial.diffuse,
+                       0.0, 1.0);
+    
+    gl_BackColor = color;
+    gl_BackColor.a *= alphaFade;
+    gl_BackSecondaryColor = Specular * gl_BackMaterial.specular;
+}
+
+void light(in vec3 frontNormal, in vec4 ecPosition, in float alphaFade)
+{
+    vec3 backNormal = -frontNormal;
+    vec3 eye = vec3 (0.0, 0.0, 1.0);
+    vec3 ecPosition3 = (vec3 (ecPosition)) / ecPosition.w;
+
+	frontLightning(frontNormal, ecPosition3, eye, alphaFade);
+	backLightning(backNormal, ecPosition3, eye, alphaFade);
+}
 
 void main (void)
 {
@@ -207,7 +223,9 @@ void main (void)
     // Do fixed functionality vertex transform
     gl_Position = ftransform();
     transformedNormal = fnormal();
-    flight(transformedNormal, ecPosition, alphaFade);
+    
+    light(transformedNormal, ecPosition, alphaFade);
+    
     gl_FogFragCoord = ffog(ecPosition.z);
     ftexgen(transformedNormal, ecPosition);
 }

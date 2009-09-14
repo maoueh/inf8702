@@ -32,7 +32,6 @@ private:
     void applyTextures();
     void deactivateTextures();
 
-    void compileCubeList(FLOAT size);
     void compileQuadGridList(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal);
     void drawQuadGrid(FLOAT size, INT rowCount, INT columnCount, BOOL isOutsideNormal);
 
@@ -49,7 +48,6 @@ private:
     TextureUnit* mRustTextureUnit;
     TextureUnit* mStonewallTextureUnit;
 
-    UINT mCubeListId;
     UINT mQuadGridListId;
 
     Color mCubeColor;
@@ -93,8 +91,6 @@ private:
     BOOL mIsSpotLightOn;
     BOOL mIsDirectionalLightOn;
     BOOL mIsPointLightOn;
-
-    FLOAT mFramerate;
 };
 
 #endif
