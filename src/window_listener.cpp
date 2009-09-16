@@ -1,12 +1,12 @@
 #include "window.h"
 #include "window_listener.h"
 
-void WindowListener::windowClosed(Window* window)
+void WindowListener::windowClosed(WindowEvent& event)
 {
 
 }
 
-void WindowListener::windowResized(Window* window, INT width, INT height)
+void WindowListener::windowResized(WindowEvent& event)
 {
 
 }

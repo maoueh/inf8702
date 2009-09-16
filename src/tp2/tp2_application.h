@@ -20,8 +20,8 @@ protected:
 
     virtual void    keyPressed(Window* window, INT keyCode, INT repeat);
 
-    virtual void    mousePressed(Window* window, INT button, INT x, INT y);
-    virtual void    mouseDragged(Window* window, INT x, INT y);
+    virtual void    mousePressed(MouseEvent& event);
+    virtual void    mouseDragged(MouseEvent& event);
 
     virtual void    draw();
 

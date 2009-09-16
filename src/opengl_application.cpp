@@ -98,7 +98,7 @@ void OpenGlApplication::keyPressed(Window* window, INT keyCode, INT repeat)
    }
 }
 
-void OpenGlApplication::windowResized(Window* window, INT width, INT height)
+void OpenGlApplication::windowResized(WindowEvent& event)
 {
     updateViewport();
 }

@@ -3,6 +3,7 @@
 
 //#define BOOL  bool
 #define FLOAT float
+#define SHORT short int
 #define INT   int
 #define BYTE  unsigned char
 

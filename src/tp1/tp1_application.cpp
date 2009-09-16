@@ -170,22 +170,22 @@ void Tp1Application::keyPressed(Window* window, INT keyCode, INT repeat)
     OpenGlApplication::keyPressed(window, keyCode, repeat);
 }
 
-void Tp1Application::mousePressed(Window* window, INT button, INT x, INT y)
+void Tp1Application::mousePressed(MouseEvent& event)
 {
-    if ( button == MOUSE_BUTTON_LEFT )
+    if ( event.button == MOUSE_BUTTON_LEFT )
     {
-        mLastMouseX = x;
-        mLastMouseY = y;
+        mLastMouseX = event.x;
+        mLastMouseY = event.y;
     }
 }
 
-void Tp1Application::mouseDragged(Window* window, INT x, INT y)
+void Tp1Application::mouseDragged(MouseEvent& event)
 {
-    mRotationAngleX += y - mLastMouseY;
-    mRotationAngleZ -= x - mLastMouseX;
+    mRotationAngleX += event.y - mLastMouseY;
+    mRotationAngleZ -= event.x - mLastMouseX;
 
-    mLastMouseX = x;
-    mLastMouseY = y;
+    mLastMouseX = event.x;
+    mLastMouseY = event.y;
 }
 
 void Tp1Application::draw()

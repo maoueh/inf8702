@@ -190,31 +190,19 @@ LRESULT Window::messageHandler(UINT messageId, WPARAM wParameter, LPARAM lParame
 	{
 	  case WM_DESTROY:
       {
-          vector<WindowListener*>::iterator it = mWindowListeners.begin();
-          while( it != mWindowListeners.end() ) {
-              (*it)->windowClosed(this);
-              it++;
-          }
+          notifyWindowClosed();
           return FALSE;
       }
       case WM_SYSKEYDOWN: // Fall through
       case WM_KEYDOWN:
       {
-          vector<KeyboardListener*>::iterator it = mKeyboardListeners.begin();
-          while( it != mKeyboardListeners.end() ) {
-              (*it)->keyPressed(this, wParameter, LOWORD(lParameter));
-              it++;
-          }
+          notifyKeyPressed(wParameter, LOWORD(lParameter));
           return FALSE;
       }
       case WM_SYSKEYUP: // Fall through
       case WM_KEYUP:
       {
-          vector<KeyboardListener*>::iterator it = mKeyboardListeners.begin();
-          while( it != mKeyboardListeners.end() ) {
-              (*it)->keyReleased(this, wParameter);
-              it++;
-          }
+          notifyKeyReleased(wParameter);
           return FALSE;
       }
       case WM_LBUTTONDOWN:
@@ -264,35 +252,19 @@ LRESULT Window::messageHandler(UINT messageId, WPARAM wParameter, LPARAM lParame
       }
       case WM_MOUSEHWHEEL:
       {
-          vector<MouseListener*>::iterator it = mMouseListeners.begin();
-          while( it != mMouseListeners.end() ) {
-              (*it)->mouseWheel(this, LOWORD(lParameter) , HIWORD(lParameter));
-              it++;
-          }
+          notifyMouseWheel(LOWORD(lParameter), HIWORD(lParameter));
           return FALSE;
       }
       case WM_MOUSEMOVE:
       {
-          BOOL anyMouseButtonPressed = isAnyMouseButtonPressed();
-          vector<MouseListener*>::iterator it = mMouseListeners.begin();
-          while( it != mMouseListeners.end() ) {
-              if ( anyMouseButtonPressed ) 
-                  (*it)->mouseDragged(this, LOWORD(lParameter), HIWORD(lParameter));
-              else
-                  (*it)->mouseMoved(this, LOWORD(lParameter), HIWORD(lParameter));
-              it++;
-          }
+          notifyMouseMoved(LOWORD(lParameter), HIWORD(lParameter));
           return FALSE;
       }
       case WM_SIZE:
       {
           mWidth = LOWORD(lParameter);
           mHeight = HIWORD(lParameter);
-          vector<WindowListener*>::iterator it = mWindowListeners.begin();
-          while( it != mWindowListeners.end() ) {
-              (*it)->windowResized(this, mWidth, mHeight);
-              it++;
-          }
+          notifyWindowResized();
           return FALSE;
       }
 	}
@@ -336,29 +308,107 @@ BOOL Window::isAnyMouseButtonPressed()
            GetAsyncKeyState(VK_RBUTTON) & 0x8000;
 }
 
+void Window::notifyKeyPressed(INT keyCode, INT repeat)
+{
+    KeyEvent event(this, keyCode, repeat);
+    vector<KeyboardListener*>::iterator it = mKeyboardListeners.begin();
+    while( it != mKeyboardListeners.end() ) 
+    {
+      (*it)->keyPressed(event);
+      it++;
+    }
+}
+
+void Window::notifyKeyReleased(INT keyCode)
+{
+    KeyEvent event(this, keyCode);
+    vector<KeyboardListener*>::iterator it = mKeyboardListeners.begin();
+    while( it != mKeyboardListeners.end() ) 
+    {
+      (*it)->keyReleased(event);
+      it++;
+    }
+}
+
 void Window::notifyMousePressed(INT button, INT x, INT y)
 {
+    MouseEvent event(this, button, x, y);
     vector<MouseListener*>::iterator it = mMouseListeners.begin();
-    while( it != mMouseListeners.end() ) {
-        (*it)->mousePressed(this, button, x, y);
+    while( it != mMouseListeners.end() ) 
+    {
+        (*it)->mousePressed(event);
         it++;
     }
 }
 
 void Window::notifyMouseReleased(INT button, INT x, INT y)
 {
+    MouseEvent event(this, button, x, y);
     vector<MouseListener*>::iterator it = mMouseListeners.begin();
-    while( it != mMouseListeners.end() ) {
-        (*it)->mouseReleased(this, button, x, y);
+    while( it != mMouseListeners.end() ) 
+    {
+        (*it)->mouseReleased(event);
         it++;
     }
 }
 
 void Window::notifyMouseDoubleClicked(INT button, INT x, INT y)
 {
+    MouseEvent event(this, button, x, y);
     vector<MouseListener*>::iterator it = mMouseListeners.begin();
-    while( it != mMouseListeners.end() ) {
-        (*it)->mouseDoubleClicked(this, button, x, y);
+    while( it != mMouseListeners.end() ) 
+    {
+        (*it)->mouseDoubleClicked(event);
         it++;
     }
 }
+
+void Window::notifyMouseMoved(INT x, INT y)
+{
+    BOOL anyMouseButtonPressed = isAnyMouseButtonPressed();
+    
+    MouseEvent event(this, NO_BUTTON, x, y);
+    vector<MouseListener*>::iterator it = mMouseListeners.begin();
+    while( it != mMouseListeners.end() ) 
+    {
+      if ( anyMouseButtonPressed ) 
+          (*it)->mouseDragged(event);
+      else
+          (*it)->mouseMoved(event);
+      it++;
+    }
+}
+
+void Window::notifyMouseWheel(INT x, INT y)
+{
+    MouseEvent event(this, NO_BUTTON, x, y);
+    vector<MouseListener*>::iterator it = mMouseListeners.begin();
+    while( it != mMouseListeners.end() ) 
+    {
+       (*it)->mouseWheel(event);
+       it++;
+    }
+}
+
+void Window::notifyWindowClosed()
+{
+    WindowEvent event(this);
+    vector<WindowListener*>::iterator it = mWindowListeners.begin();
+    while( it != mWindowListeners.end() ) 
+    {
+      (*it)->windowClosed(event);
+      it++;
+    }
+}
+
+void Window::notifyWindowResized()
+{
+    WindowEvent event(this, mWidth, mHeight);
+    vector<WindowListener*>::iterator it = mWindowListeners.begin();
+    while( it != mWindowListeners.end() ) 
+    {
+      (*it)->windowResized(event);
+      it++;
+    }
+}
+

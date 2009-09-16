@@ -22,7 +22,7 @@ protected:
 
     virtual void    keyPressed(Window* window, int keyCode, int repeat);
 
-    virtual void    windowResized(Window* window, INT width, INT height);
+    virtual void    windowResized(WindowEvent& event);
 
     virtual void    draw() = 0;
     virtual void    updateCamera();

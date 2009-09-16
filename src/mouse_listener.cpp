@@ -1,32 +1,32 @@
 #include "mouse_listener.h"
 #include "window.h"
 
-void MouseListener::mousePressed(Window* window, INT button, INT x, INT y)
+void MouseListener::mousePressed(MouseEvent& event)
 {
 
 }
 
-void MouseListener::mouseReleased(Window* window, INT button, INT x, INT y)
+void MouseListener::mouseReleased(MouseEvent& event)
 {
 
 }
 
-void MouseListener::mouseDoubleClicked(Window* window, INT button, INT x, INT y)
+void MouseListener::mouseDoubleClicked(MouseEvent& event)
 {
 
 }
 
-void MouseListener::mouseMoved(Window* window, INT x, INT y)
+void MouseListener::mouseMoved(MouseEvent& event)
 {
 
 }
 
-void MouseListener::mouseDragged(Window* window, INT x, INT y)
+void MouseListener::mouseDragged(MouseEvent& event)
 {
 
 }
 
-void MouseListener::mouseWheel(Window* window, INT x, INT y)
+void MouseListener::mouseWheel(MouseEvent& event)
 {
 
 }

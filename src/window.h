@@ -54,9 +54,17 @@ private:
 
     BOOL    isAnyMouseButtonPressed();
 
+    void    notifyKeyPressed(INT keyCode, INT repeat);
+    void    notifyKeyReleased(INT keyCode);
+
     void    notifyMousePressed(INT button, INT x, INT y);
     void    notifyMouseReleased(INT button, INT x, INT y);
     void    notifyMouseDoubleClicked(INT button, INT x, INT y);
+    void    notifyMouseMoved(INT x, INT y);
+    void    notifyMouseWheel(INT x, INT y);
+
+    void    notifyWindowClosed();
+    void    notifyWindowResized();
 
 	HWND		              mHandle;
 	RECT		              mClientSize;

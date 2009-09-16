@@ -21,12 +21,25 @@ public:
     Color(FLOAT red, FLOAT green, FLOAT blue);
     Color(FLOAT red, FLOAT green, FLOAT blue, FLOAT alpha);
 
-    inline FLOAT red()   { return components[0]; }
-    inline FLOAT green() { return components[1]; }
-    inline FLOAT blue()  { return components[2]; }
-    inline FLOAT alpha() { return components[3]; }
+    inline FLOAT& operator[] (const int index);
+    inline Color& operator= (const Color& rightSide);
+
+    inline bool operator== (const Color& rightSide) const;
+    inline bool operator!= (const Color& rightSide) const;
+
+    inline Color& operator += (const Color& rightSide);
+    inline Color& operator -= (const Color& rightSide);
+    inline Color& operator *= (const Color& rightSide);
+    inline Color& operator *= (const FLOAT scalar);
+
+    inline FLOAT red()   { return components[RED_COMPONENT]; }
+    inline FLOAT green() { return components[GREEN_COMPONENT]; }
+    inline FLOAT blue()  { return components[BLUE_COMPONENT]; }
+    inline FLOAT alpha() { return components[ALPHA_COMPONENT]; }
 
     FLOAT components[4];
 };
+
+#include "color.inl"
 
 #endif

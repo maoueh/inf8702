@@ -358,6 +358,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\color.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\shader.inl"
 				>
 			</File>
